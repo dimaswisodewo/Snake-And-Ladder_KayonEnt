@@ -8,6 +8,13 @@ public static class MathUtility
     {
         return Random.Range(1, 6);
     }
+
+    public static Color ConvertToColor(Color32 color)
+    {
+        Color newColor = new Color(color.r / 255f, color.g / 255f, color.b / 255f, color.a / 255f);
+
+        return newColor;
+    }
 }
 public static class Config
 {
@@ -55,12 +62,6 @@ public static class Config
         return newColor;
     }
 
-    public static Color ConvertToColor(Color32 color)
-    {
-        Color newColor = new Color(color.r / 255f, color.g / 255f, color.b / 255f, color.a / 255f);
-
-        return newColor;
-    }
 }
 
 public enum COLOR
