@@ -5,21 +5,21 @@ using Cinemachine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Transform _CameraFollow;
+    [SerializeField] private Transform _CameraLookAt;
     [SerializeField] private CinemachineVirtualCamera _CineCam;
 
     private void Awake()
     {
-        SetCameraFollow(_CameraFollow);
+        SetCameraLookAt(_CameraLookAt);
     }
 
-    public void SetCameraFollow(Transform follow)
+    public void SetCameraLookAt(Transform lookAt)
     {
-        _CineCam.Follow = follow;
+        _CineCam.LookAt = lookAt;
     }
 
-    public void SetCameraFollowPosition(Vector2 toPosition)
+    public void SetCameraLookAtPosition(Vector2 toPosition)
     {
-        _CameraFollow.position = toPosition;
+        _CameraLookAt.position = toPosition;
     }
 }
