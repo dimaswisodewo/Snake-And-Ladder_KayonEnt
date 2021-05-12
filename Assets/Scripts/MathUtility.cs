@@ -31,31 +31,31 @@ public static class Config
         switch (color)
         {
             case COLOR.RED:
-                newColor = Config.COLOR_RED;
+                newColor = COLOR_RED;
                 break;
 
             case COLOR.GREEN:
-                newColor = Config.COLOR_GREEN;
+                newColor = COLOR_GREEN;
                 break;
 
             case COLOR.BLUE:
-                newColor = Config.COLOR_BLUE;
+                newColor = COLOR_BLUE;
                 break;
 
             case COLOR.YELLOW:
-                newColor = Config.COLOR_YELLOW;
+                newColor = COLOR_YELLOW;
                 break;
 
             case COLOR.PURPLE:
-                newColor = Config.COLOR_PURPLE;
+                newColor = COLOR_PURPLE;
                 break;
 
             case COLOR.PINK:
-                newColor = Config.COLOR_PINK;
+                newColor = COLOR_PINK;
                 break;
 
             default:
-                newColor = Config.COLOR_RED;
+                newColor = COLOR_RED;
                 break;
         }
 
