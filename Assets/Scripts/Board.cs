@@ -21,17 +21,23 @@ public class Board : MonoBehaviour
     private void InitializeBoard()
     {
         int iteration = 1;
+        bool isReversed = false;
         for (int i = 0; i < tileCount; i++)
         {
             GameObject row = Instantiate(_DummyObject, transform);
-            row.transform.name = "X" + i;
+            row.transform.name = "Row_" + i;
             row.transform.position = new Vector2(0, i);
 
             for (int j = 0; j < tileCount; j++)
             {
+                // Get new position for instantiated tile
+                Vector2 tilePos;
+                if (isReversed) tilePos = new Vector2((tileCount - 1) - j, i);
+                else tilePos = new Vector2(j, i);
+
                 GameObject obj = Instantiate(_TilePrefab, row.transform);
-                obj.transform.name = "Y" + j;
-                obj.transform.position = new Vector2(j, i);
+                obj.transform.name = "Tile_" + iteration;
+                obj.transform.position = tilePos;
 
                 Tile tile = obj.GetComponent<Tile>();
                 tile.SetText(iteration.ToString());
@@ -39,6 +45,8 @@ public class Board : MonoBehaviour
 
                 iteration++;
             }
+
+            isReversed = !isReversed;
         }
         
     }
