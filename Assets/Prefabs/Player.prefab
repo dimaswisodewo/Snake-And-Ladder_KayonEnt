@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 2817623722989334584}
-  tilePosition: 1
+  tilePosition: 0
 --- !u!1 &2817623722989334586
 GameObject:
   m_ObjectHideFlags: 0

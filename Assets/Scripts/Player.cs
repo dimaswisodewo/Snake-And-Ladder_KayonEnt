@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-    public int tilePosition = 1;
+    public int tilePosition = 0;
 
     public void SetSpriteColor(COLOR colorEnum)
     {
@@ -14,4 +14,8 @@ public class Player : MonoBehaviour
         spriteRenderer.color = newColor;
     }
 
+    public void SetPlayerPosition(Vector2 newPosition)
+    {
+        transform.position = newPosition;
+    }
 }

@@ -17,6 +17,7 @@ public class Board : MonoBehaviour
             _DummyObject = new GameObject();
 
         InstantiateTiles();
+        Destroy(_DummyObject);
     }
 
     private void InstantiateTiles()

@@ -5,8 +5,11 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     [SerializeField] private Board _Board;
+    [SerializeField] private Dice _Dice;
     [SerializeField] private CameraController _CamController;
     [SerializeField] private PlayerManager _PlayerManager;
+
+    private int _PlayingPlayerIndex = 0;
 
     private void Awake()
     {
@@ -24,4 +27,31 @@ public class GameplayManager : MonoBehaviour
         _CamController.SetCameraLookAtPosition(camLookAtPos);
     }
 
+    private int GetTileDestinationIndex(Player player)
+    {
+        int maxTileIndex = _Board.tiles.Count - 1;
+        int tileDestinationIndex = player.tilePosition + _Dice.diceNumber;
+
+        if (tileDestinationIndex > maxTileIndex)
+        {
+            int remainder = tileDestinationIndex - maxTileIndex;
+            tileDestinationIndex = maxTileIndex - remainder;
+        }
+
+        return tileDestinationIndex;
+    }
+
+    public void MoveCurrentlyPlayingPlayer()
+    {
+        Player player = _PlayerManager.GetCurrentPlayingPlayer(_PlayingPlayerIndex);
+        player.tilePosition = GetTileDestinationIndex(player); 
+
+        Vector2 newPosition = _Board.tiles[player.tilePosition].transform.position;
+        player.SetPlayerPosition(newPosition);
+
+        // TODO: Mindahin code dibawah, mungkin ke PlayerManager
+        _PlayingPlayerIndex++;
+        if (_PlayingPlayerIndex > _PlayerManager._PlayerCount - 1)
+            _PlayingPlayerIndex = 0;
+    }
 }

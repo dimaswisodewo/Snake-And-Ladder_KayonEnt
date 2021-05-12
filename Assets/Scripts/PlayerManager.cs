@@ -5,9 +5,10 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject _PlayerPrefab;
-
+    
     [Range(1, 6)]
-    [SerializeField] private int _PlayerCount = 2;
+    public int _PlayerCount = 2;
+    public List<Player> activePlayers = new List<Player>();
 
     public void InitializePlayer()
     {
@@ -17,11 +18,19 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public Player GetCurrentPlayingPlayer(int index)
+    {
+        return activePlayers[index];
+    }
+
     private void InstantiatePlayer(int index)
     {
-        GameObject player = Instantiate(_PlayerPrefab, transform);
-        player.name = "Player_" + (index + 1);
-        player.GetComponent<Player>().SetSpriteColor((COLOR)index);
+        GameObject obj = Instantiate(_PlayerPrefab, transform);
+        obj.name = "Player_" + (index + 1);
+
+        Player player = obj.GetComponent<Player>();
+        player.SetSpriteColor((COLOR)index);
+        activePlayers.Add(player);
     }
 
 }
