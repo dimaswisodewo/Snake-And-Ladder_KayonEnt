@@ -14,8 +14,8 @@ public class Player : MonoBehaviour
         spriteRenderer.color = newColor;
     }
 
-    public void SetPlayerPosition(Vector2 newPosition)
+    public void JumpToPosition(Vector2 newPosition)
     {
-        transform.position = newPosition;
+        Tweening.JumpTo(transform, newPosition);
     }
 }

@@ -298,7 +298,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1352821939}
         m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
-        m_MethodName: MoveCurrentlyPlayingPlayer
+        m_MethodName: PlayerAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _PlayerPrefab: {fileID: 2817623720893679970, guid: 772eab0dfc8237e4997952e98dc67191, type: 3}
-  _PlayerCount: 6
+  _PlayerToSpawn: 6
   activePlayers: []
 --- !u!1 &814311157
 GameObject:

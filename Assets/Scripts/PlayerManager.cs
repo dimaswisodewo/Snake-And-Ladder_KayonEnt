@@ -5,22 +5,29 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject _PlayerPrefab;
-    
+    private int _CurrentlyPlayingIndex = 0;
     [Range(1, 6)]
-    public int _PlayerCount = 2;
+    public int _PlayerToSpawn = 2;
     public List<Player> activePlayers = new List<Player>();
 
     public void InitializePlayer()
     {
-        for (int i = 0; i < _PlayerCount; i++)
+        for (int i = 0; i < _PlayerToSpawn; i++)
         {
             InstantiatePlayer(i);
         }
     }
 
-    public Player GetCurrentPlayingPlayer(int index)
+    public Player GetCurrentPlayingPlayer()
     {
-        return activePlayers[index];
+        return activePlayers[_CurrentlyPlayingIndex];
+    }
+
+    public void SetNextPlayingPlayer()
+    {
+        _CurrentlyPlayingIndex++;
+        if (_CurrentlyPlayingIndex > activePlayers.Count - 1)
+            _CurrentlyPlayingIndex = 0;
     }
 
     private void InstantiatePlayer(int index)

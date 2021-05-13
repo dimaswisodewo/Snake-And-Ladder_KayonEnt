@@ -9,7 +9,8 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private CameraController _CamController;
     [SerializeField] private PlayerManager _PlayerManager;
 
-    private int _PlayingPlayerIndex = 0;
+    private delegate void OnPlayerMoveFinished();
+    private OnPlayerMoveFinished onPlayerMoveFinished;
 
     private void Awake()
     {
@@ -41,17 +42,32 @@ public class GameplayManager : MonoBehaviour
         return tileDestinationIndex;
     }
 
-    public void MoveCurrentlyPlayingPlayer()
+    private bool HasPlayerWin(Player inputPlayer)
     {
-        Player player = _PlayerManager.GetCurrentPlayingPlayer(_PlayingPlayerIndex);
-        player.tilePosition = GetTileDestinationIndex(player); 
+        if (inputPlayer.tilePosition == _Board.tiles.Count - 1) return true;
+        else return false;
+    }
 
+    private void SetPlayerHasWin(Player inputPlayer)
+    {
+        _PlayerManager.activePlayers.Remove(inputPlayer);
+    }
+
+    public void PlayerAction()
+    {
+        Player player = _PlayerManager.GetCurrentPlayingPlayer();
+        player.tilePosition = GetTileDestinationIndex(player);
+
+        // Move currently playing player to destination tile
         Vector2 newPosition = _Board.tiles[player.tilePosition].transform.position;
-        player.SetPlayerPosition(newPosition);
+        player.JumpToPosition(newPosition);
 
-        // TODO: Mindahin code dibawah, mungkin ke PlayerManager
-        _PlayingPlayerIndex++;
-        if (_PlayingPlayerIndex > _PlayerManager._PlayerCount - 1)
-            _PlayingPlayerIndex = 0;
+        _PlayerManager.SetNextPlayingPlayer();
+
+        // Check if player is on last tile
+        if (HasPlayerWin(player))
+            SetPlayerHasWin(player);
+
+        onPlayerMoveFinished?.Invoke();
     }
 }
