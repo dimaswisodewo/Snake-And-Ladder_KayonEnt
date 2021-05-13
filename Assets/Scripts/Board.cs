@@ -5,11 +5,19 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     [SerializeField] private GameObject _TilePrefab;
-    [SerializeField] private Vector2 tileCount = new Vector2(10, 10);
+    
+    [Min(2f)]
+    [SerializeField] private int _RowCount = 10;
+    
+    [Min(2f)]
+    [SerializeField] private int _ColCount = 10;
+    
     private GameObject _DummyObject;
+    
     public List<Tile> tiles = new List<Tile>();
-    public int rowCount { get { return (int)tileCount.x; } }
-    public int colCount {  get { return (int)tileCount.y; } }
+    
+    public int rowCount { get { return _RowCount; } }
+    public int colCount {  get { return _ColCount; } }
 
     public void InitializeBoard()
     {
@@ -20,29 +28,49 @@ public class Board : MonoBehaviour
         Destroy(_DummyObject);
     }
 
-    public Queue<Vector2> GetStepQueue(int currentTilePos, int diceNumber)
+    // TODO: Refactor function ini kalo sempet
+    public Queue<Vector2> GetStepQueue(Player player, int currentTilePos, int diceNumber)
     {
         Queue<Vector2> stepQueue = new Queue<Vector2>();
         int maxTileIndex = tiles.Count - 1;
-        int tileDestinationIndex = currentTilePos + diceNumber;
+        int numOfStep = diceNumber;
+        int stepIndex = currentTilePos;
+        bool isReversed = false;
 
-        // When player overlap the finish tile and moving backward
-        if (tileDestinationIndex > maxTileIndex)
+        while (numOfStep > 0)
         {
-            int remainder = tileDestinationIndex - maxTileIndex;
-            tileDestinationIndex = maxTileIndex - remainder;
+            if (isReversed)
+            {
+                if ((stepIndex - 1) >= 0)
+                {
+                    stepIndex -= 1;
+                }
+                else
+                {
+                    isReversed = false;
+                    continue;
+                }
+            }
 
-            for (int i = currentTilePos + 1; i <= maxTileIndex; i++)
-                stepQueue.Enqueue(tiles[i].transform.position);
-            for (int i = maxTileIndex - 1; i >= tileDestinationIndex; i--)
-                stepQueue.Enqueue(tiles[i].transform.position);
+            if (!isReversed)
+            {
+                if ((stepIndex + 1) <= maxTileIndex)
+                {
+                    stepIndex += 1;
+                }
+                else
+                {
+                    isReversed = true;
+                    continue;
+                }
+            }
+
+            stepQueue.Enqueue(tiles[stepIndex].transform.position);
+            numOfStep--;
         }
-        else
-        {
-            for (int i = currentTilePos + 1; i <= tileDestinationIndex; i++)
-                stepQueue.Enqueue(tiles[i].transform.position);
-        }
-        
+
+        // TODO: Misahin set tilePosition dari function ini
+        player.tilePosition = stepIndex; // get destination tile index
         return stepQueue;
     }
 
@@ -50,17 +78,17 @@ public class Board : MonoBehaviour
     {
         int iteration = 1;
         bool isReversed = false;
-        for (int i = 0; i < tileCount.y; i++)
+        for (int i = 0; i < _RowCount; i++)
         {
             GameObject row = Instantiate(_DummyObject, transform);
             row.transform.name = "Row_" + i;
             row.transform.position = new Vector2(0, i);
 
-            for (int j = 0; j < tileCount.x; j++)
+            for (int j = 0; j < _ColCount; j++)
             {
                 // Get new position for instantiated tile
                 Vector2 tilePos;
-                if (isReversed) tilePos = new Vector2((tileCount.x - 1) - j, i);
+                if (isReversed) tilePos = new Vector2((_ColCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
                 GameObject obj = Instantiate(_TilePrefab, row.transform);
