@@ -6,9 +6,18 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject _PlayerPrefab;
     private int _CurrentlyPlayingIndex = 0;
+    
     [Range(1, 6)]
     public int _PlayerToSpawn = 2;
-    public List<Player> activePlayers = new List<Player>();
+
+    [HideInInspector]
+    public int _NumOfActivePlayer;
+    public List<Player> players = new List<Player>();
+
+    private void Awake()
+    {
+        _NumOfActivePlayer = _PlayerToSpawn;
+    }
 
     public void InitializePlayer()
     {
@@ -20,14 +29,22 @@ public class PlayerManager : MonoBehaviour
 
     public Player GetCurrentPlayingPlayer()
     {
-        return activePlayers[_CurrentlyPlayingIndex];
+        return players[_CurrentlyPlayingIndex];
     }
 
     public void SetNextPlayingPlayer()
     {
+        // TODO: Refactor code dibawah, geleuh euy
         _CurrentlyPlayingIndex++;
-        if (_CurrentlyPlayingIndex > activePlayers.Count - 1)
+        if (_CurrentlyPlayingIndex > players.Count - 1)
             _CurrentlyPlayingIndex = 0;
+
+        while (players[_CurrentlyPlayingIndex].hasWin && _NumOfActivePlayer > 0)
+        {
+            _CurrentlyPlayingIndex++;
+            if (_CurrentlyPlayingIndex > players.Count - 1)
+                _CurrentlyPlayingIndex = 0;
+        }
     }
 
     private void InstantiatePlayer(int index)
@@ -37,7 +54,7 @@ public class PlayerManager : MonoBehaviour
 
         Player player = obj.GetComponent<Player>();
         player.SetSpriteColor((COLOR)index);
-        activePlayers.Add(player);
+        players.Add(player);
     }
 
 }

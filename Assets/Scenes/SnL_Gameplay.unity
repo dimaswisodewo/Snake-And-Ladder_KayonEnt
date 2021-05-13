@@ -292,6 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _DiceText: {fileID: 1471633121}
+  _RollButton: {fileID: 814311159}
   diceNumber: 0
   onRollDiceFinished:
     m_PersistentCalls:
@@ -432,7 +433,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PlayerPrefab: {fileID: 2817623720893679970, guid: 772eab0dfc8237e4997952e98dc67191, type: 3}
   _PlayerToSpawn: 6
-  activePlayers: []
+  _NumOfActivePlayer: 0
+  players: []
 --- !u!1 &814311157
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,12 +9,14 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private CameraController _CamController;
     [SerializeField] private PlayerManager _PlayerManager;
 
-    private delegate void OnPlayerMoveFinished();
-    private OnPlayerMoveFinished onPlayerMoveFinished;
+    private delegate void OnGameIsOver();
+    private OnGameIsOver onGameIsOver;
 
     private void Awake()
     {
         InitializeGameComponent();
+
+        onGameIsOver += GameIsOver;
     }
 
     private void InitializeGameComponent()
@@ -50,24 +52,42 @@ public class GameplayManager : MonoBehaviour
 
     private void SetPlayerHasWin(Player inputPlayer)
     {
-        _PlayerManager.activePlayers.Remove(inputPlayer);
+        inputPlayer.hasWin = true;
+        _PlayerManager._NumOfActivePlayer--;
+    }
+
+    private bool IsGameOver()
+    {
+        if (_PlayerManager._NumOfActivePlayer > 0) return false;
+        else return true;
+    }
+
+    private void GameIsOver()
+    {
+        Debug.Log("GAME IS OVER!!!");
     }
 
     public void PlayerAction()
     {
+        if (IsGameOver())
+            return;
+
         Player player = _PlayerManager.GetCurrentPlayingPlayer();
+        _PlayerManager.SetNextPlayingPlayer();
+
+        // Get queue of player step
+        Queue<Vector2> stepQueue = _Board.GetStepQueue(player.tilePosition, _Dice.diceNumber);
         player.tilePosition = GetTileDestinationIndex(player);
 
-        // Move currently playing player to destination tile
-        Vector2 newPosition = _Board.tiles[player.tilePosition].transform.position;
-        player.JumpToPosition(newPosition);
-
-        _PlayerManager.SetNextPlayingPlayer();
+        // Move currently playing player step by step to destination tile
+        player.JumpStepByStep(stepQueue, () => _Dice.SetActiveRollDiceButton(false), () => _Dice.SetActiveRollDiceButton(true));
 
         // Check if player is on last tile
         if (HasPlayerWin(player))
             SetPlayerHasWin(player);
 
-        onPlayerMoveFinished?.Invoke();
+        // Check if game is over
+        if (IsGameOver())
+            onGameIsOver?.Invoke();
     }
 }

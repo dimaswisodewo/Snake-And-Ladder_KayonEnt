@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public int tilePosition = 0;
+    public bool hasWin;
 
     public void SetSpriteColor(COLOR colorEnum)
     {
@@ -14,8 +15,30 @@ public class Player : MonoBehaviour
         spriteRenderer.color = newColor;
     }
 
-    public void JumpToPosition(Vector2 newPosition)
+    public void JumpStepByStep(Queue<Vector2> stepQueue, System.Action onJumpStart = null, System.Action onJumpFinish = null)
     {
-        Tweening.JumpTo(transform, newPosition);
+        StartCoroutine(JumpProgressively(stepQueue, onJumpStart, onJumpFinish));
     }
+
+    private IEnumerator JumpProgressively(Queue<Vector2> stepQueue, System.Action onJumpStart = null, System.Action onJumpFinish = null)
+    {
+        onJumpStart?.Invoke();
+
+        while (stepQueue.Count > 0)
+        {
+            Vector2 to = stepQueue.Dequeue();
+            yield return StartCoroutine(JumpToNextTile(to));
+        }
+
+        onJumpFinish?.Invoke();
+    }
+
+    private IEnumerator JumpToNextTile(Vector2 to)
+    {
+        Tweening.JumpTo(transform, to);
+
+        while ((Vector2)transform.position != to)
+            yield return null;
+    }
+
 }
