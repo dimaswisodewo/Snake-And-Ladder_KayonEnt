@@ -17,6 +17,33 @@ public class Board : MonoBehaviour
             _DummyObject = new GameObject();
 
         InstantiateTiles();
+        Destroy(_DummyObject);
+    }
+
+    public Queue<Vector2> GetStepQueue(int currentTilePos, int diceNumber)
+    {
+        Queue<Vector2> stepQueue = new Queue<Vector2>();
+        int maxTileIndex = tiles.Count - 1;
+        int tileDestinationIndex = currentTilePos + diceNumber;
+
+        // When player overlap the finish tile and moving backward
+        if (tileDestinationIndex > maxTileIndex)
+        {
+            int remainder = tileDestinationIndex - maxTileIndex;
+            tileDestinationIndex = maxTileIndex - remainder;
+
+            for (int i = currentTilePos + 1; i <= maxTileIndex; i++)
+                stepQueue.Enqueue(tiles[i].transform.position);
+            for (int i = maxTileIndex - 1; i >= tileDestinationIndex; i--)
+                stepQueue.Enqueue(tiles[i].transform.position);
+        }
+        else
+        {
+            for (int i = currentTilePos + 1; i <= tileDestinationIndex; i++)
+                stepQueue.Enqueue(tiles[i].transform.position);
+        }
+        
+        return stepQueue;
     }
 
     private void InstantiateTiles()
