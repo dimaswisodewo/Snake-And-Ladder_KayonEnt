@@ -6,7 +6,7 @@ public static class MathUtility
 {
     public static int GetRandomDiceNumber()
     {
-        return Random.Range(1, 6);
+        return Random.Range(1, 7);
     }
 
     public static Color ConvertToColor(Color32 color)
