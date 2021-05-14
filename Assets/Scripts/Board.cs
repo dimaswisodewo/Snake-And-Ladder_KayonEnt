@@ -40,8 +40,8 @@ public class Board : MonoBehaviour
             _DummyObject = new GameObject();
 
         InstantiateTiles();
+        InitializeLadder();
 
-        GenerateLadderIndex();
         Destroy(_DummyObject);
     }
 
@@ -123,14 +123,31 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void InstantiateLadder()
+    private void InitializeLadder()
     {
+        try
+        {
+            GenerateLadderIndex();
+        }
+        catch (System.Exception ioe)
+        {
+            Debug.LogError("Error on Generating ladder Index: " + ioe.ToString());
+        }
 
-    }
+        // Set ladder component
+        for (int i = 0; i < ladderBottom.Count; i++)
+        {
+            int bottomIndex = ladderBottom[i];
+            int topIndex = ladderTop[i];
 
-    private void InstantiateSnake()
-    {
+            tiles[bottomIndex].gameObject.AddComponent<Ladder>();
+            tiles[bottomIndex].tileType = TILE_TYPE.LADDER_BOTTOM;
+            tiles[topIndex].tileType = TILE_TYPE.LADDER_TOP;
 
+            Ladder ladder = tiles[bottomIndex].GetComponent<Ladder>();
+            ladder.bottom = bottomIndex;
+            ladder.top = topIndex;
+        }
     }
 
     private void GenerateLadderIndex()
@@ -149,9 +166,11 @@ public class Board : MonoBehaviour
             if (ladderBottom.Count >= _LadderCount || ladderTop.Count >= _LadderCount)
                 break;
 
+            // Generate ladder bottom index
             int bottomIndex = MathUtility.GetRandomNumberNoRepeat(minBottom, maxBottom, ladderBottom);
             ladderBottom.Add(bottomIndex);
 
+            // Generate ladder top index
             int topIndex = MathUtility.GetRandomNumberNoRepeat(minTop, maxTop, ladderTop);
             while (topIndex <= bottomIndex || IsOnTheSameRow(topIndex, bottomIndex))
             {

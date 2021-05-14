@@ -11,4 +11,10 @@ public class Ladder : MonoBehaviour
     {
         return top;
     }
+
+    public void MovePlayerToTop(Player player)
+    {
+        //Transform ladderTop = Board.Instance.tiles[top].transform;
+        //transform.position
+    }
 }

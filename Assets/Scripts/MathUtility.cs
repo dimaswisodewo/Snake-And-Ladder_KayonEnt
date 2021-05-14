@@ -100,6 +100,8 @@ public enum COLOR
 public enum TILE_TYPE
 {
     TILE,
-    LADDER,
-    SNAKE
+    LADDER_TOP,
+    LADDER_BOTTOM,
+    SNAKE_HEAD,
+    SNAKE_TAIL
 }
