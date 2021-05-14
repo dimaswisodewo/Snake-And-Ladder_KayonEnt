@@ -9,6 +9,29 @@ public static class MathUtility
         return Random.Range(1, 7);
     }
 
+    public static int GetRandomNumber(int min, int max)
+    {
+        return Random.Range(min, max);
+    }
+
+    public static int GetRandomNumberNoRepeat(int min, int max, List<int> collection)
+    {
+        // If all possible number already generated
+        if (collection.Count == max)
+        {
+            Debug.Log("All possible number already generated");
+            return -1;
+        }
+
+        int randomNumber = GetRandomNumber(min, max);
+        while (collection.Contains(randomNumber))
+        {
+            randomNumber = GetRandomNumber(min, max);
+        }
+
+        return randomNumber;
+    }
+
     public static Color ConvertToColor(Color32 color)
     {
         Color newColor = new Color(color.r / 255f, color.g / 255f, color.b / 255f, color.a / 255f);
@@ -72,4 +95,11 @@ public enum COLOR
     YELLOW,
     PURPLE,
     PINK
+}
+
+public enum TILE_TYPE
+{
+    TILE,
+    LADDER,
+    SNAKE
 }
