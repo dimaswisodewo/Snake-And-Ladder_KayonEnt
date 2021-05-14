@@ -16,6 +16,8 @@ public class GameplayManager : MonoBehaviour
     {
         InitializeGameComponent();
 
+        UIManager.Instance.SetPlayerText("PLAYER " + (_PlayerManager.CurrentlyPlayingIndex + 1));
+
         onGameIsOver += GameIsOver;
     }
 
@@ -62,6 +64,7 @@ public class GameplayManager : MonoBehaviour
     {
         PlayerTilePositionChecking(player);
         _Dice.SetActiveRollDiceButton(true);
+        UIManager.Instance.SetPlayerText("PLAYER " + (_PlayerManager.CurrentlyPlayingIndex + 1));
     }
 
     private void PlayerTilePositionChecking(Player player)
@@ -74,6 +77,13 @@ public class GameplayManager : MonoBehaviour
                 ladder.MovePlayerToTop(player);
                 player.tilePosition = ladder.top;
                 Debug.Log("Climb, Tile: " + ladder.bottom + " to " + ladder.top + ", Type: " + tile.tileType);
+                break;
+
+            case TILE_TYPE.SNAKE_HEAD:
+                Snake snake = tile.GetComponent<Snake>();
+                snake.MovePlayerToTail(player);
+                player.tilePosition = snake.tail;
+                Debug.Log("Eaten, Tile: " + snake.head + " to " + snake.tail + ", Type: " + tile.tileType);
                 break;
 
             default:

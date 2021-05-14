@@ -14,6 +14,8 @@ public class PlayerManager : MonoBehaviour
     public int _NumOfActivePlayer;
     public List<Player> players = new List<Player>();
 
+    public int CurrentlyPlayingIndex { get { return _CurrentlyPlayingIndex; } }
+
     private void Awake()
     {
         _NumOfActivePlayer = _PlayerToSpawn;

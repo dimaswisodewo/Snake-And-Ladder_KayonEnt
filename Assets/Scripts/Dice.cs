@@ -10,6 +10,7 @@ public class Dice : MonoBehaviour
     [SerializeField] private Button _RollButton;
     public int diceNumber;
 
+    [Header("Events")]
     public UnityEvent onRollDiceFinished;
 
     public void RollDice()

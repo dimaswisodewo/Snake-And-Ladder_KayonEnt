@@ -7,11 +7,6 @@ public class Ladder : MonoBehaviour
     public int top;
     public int bottom;
 
-    public int GetLadderTopIndex()
-    {
-        return top;
-    }
-
     public void MovePlayerToTop(Player player, System.Action onMoveStart = null, System.Action onMoveFinish = null)
     {
         StartCoroutine(MovePlayerToTopCoroutine(player, onMoveStart, onMoveFinish));
