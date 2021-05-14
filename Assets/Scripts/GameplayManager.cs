@@ -53,6 +53,35 @@ public class GameplayManager : MonoBehaviour
         Debug.Log("GAME IS OVER!!!");
     }
 
+    private void OnPlayerStartMoving(Player player = null)
+    {
+        _Dice.SetActiveRollDiceButton(false);
+    }
+
+    private void OnPlayerFinishMoving(Player player = null)
+    {
+        PlayerTilePositionChecking(player);
+        _Dice.SetActiveRollDiceButton(true);
+    }
+
+    private void PlayerTilePositionChecking(Player player)
+    {
+        Tile tile = _Board.tiles[player.tilePosition];
+        switch (tile.tileType)
+        {
+            case TILE_TYPE.LADDER_BOTTOM:
+                Ladder ladder = tile.GetComponent<Ladder>();
+                ladder.MovePlayerToTop(player);
+                player.tilePosition = ladder.top;
+                Debug.Log("Climb, Tile: " + ladder.bottom + " to " + ladder.top + ", Type: " + tile.tileType);
+                break;
+
+            default:
+                Debug.Log("No Action, Tile: " + player.tilePosition + ", Type: " + tile.tileType);
+                break;
+        }
+    }
+
     public void PlayerAction()
     {
         if (IsGameOver())
@@ -65,7 +94,7 @@ public class GameplayManager : MonoBehaviour
         Queue<Vector2> stepQueue = _Board.GetStepQueue(player, player.tilePosition, _Dice.diceNumber);
 
         // Move currently playing player step by step to destination tile
-        player.JumpStepByStep(stepQueue, () => _Dice.SetActiveRollDiceButton(false), () => _Dice.SetActiveRollDiceButton(true));
+        player.JumpStepByStep(stepQueue, () => OnPlayerStartMoving(), () => OnPlayerFinishMoving(player));
 
         // Check if player is on last tile
         if (HasPlayerWin(player))
