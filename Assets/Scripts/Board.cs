@@ -5,24 +5,29 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     public static Board Instance;
-
+    
+    [Header("Prefabs")]
     [SerializeField] private GameObject _TilePrefab;
-    
-    [Min(2f)]
+
+    [Header("Resolution")]
+    [Min(2)]
     [SerializeField] private int _RowCount = 10;
-    
-    [Min(2f)]
+    [Min(2)]
     [SerializeField] private int _ColCount = 10;
 
+    [Header("Components")]
+    [Min(0)]
     [SerializeField] private int _LadderCount = 5;
+    [Min(0)]
     [SerializeField] private int _SnakeCount = 5;
 
     private GameObject _DummyObject;
+    private int _AvailableSlot;
+    private int _AllowedAmountOfTileComponents;
     
+    [Header("Collections")]
     public List<Tile> tiles = new List<Tile>();
-
-    public List<int> ladderTop = new List<int>();
-    public List<int> ladderBottom = new List<int>();
+    public Queue<int[]> componentsSlot = new Queue<int[]>();
 
     public int rowCount { get { return _RowCount; } }
     public int colCount {  get { return _ColCount; } }
@@ -36,11 +41,23 @@ public class Board : MonoBehaviour
 
     public void InitializeBoard()
     {
+        // Get max amount of snake and ladder allowed
+        _AvailableSlot = (_RowCount * _ColCount) - 2;
+        _AvailableSlot = _AvailableSlot % 2 == 0 ? _AvailableSlot : _AvailableSlot--;
+        _AllowedAmountOfTileComponents = _AvailableSlot / 2;
+
+        if (!IsTileComponentsValueValid())
+        {
+            Debug.LogError("Amount of Ladder and Snake should not exceed " + _AllowedAmountOfTileComponents);
+            return;
+        }
+
         if (_DummyObject == null)
             _DummyObject = new GameObject();
 
         InstantiateTiles();
-        InitializeLadder();
+        GenerateTileComponentsSlot();
+        GenerateLadder();
 
         Destroy(_DummyObject);
     }
@@ -123,66 +140,51 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void InitializeLadder()
+    private void GenerateTileComponentsSlot()
     {
-        try
-        {
-            GenerateLadderIndex();
-        }
-        catch (System.Exception ioe)
-        {
-            Debug.LogError("Error on Generating ladder Index: " + ioe.ToString());
-        }
+        Debug.Log("Ladder Count: " + _LadderCount + ", Snake Count: " + _SnakeCount);
 
-        // Set ladder component
-        for (int i = 0; i < ladderBottom.Count; i++)
+        // Generate tile index pair for ladder or snake
+        List<int> temp = new List<int>();
+        while (componentsSlot.Count < _AllowedAmountOfTileComponents)
         {
-            int bottomIndex = ladderBottom[i];
-            int topIndex = ladderTop[i];
-
-            tiles[bottomIndex].gameObject.AddComponent<Ladder>();
-            tiles[bottomIndex].tileType = TILE_TYPE.LADDER_BOTTOM;
-            tiles[topIndex].tileType = TILE_TYPE.LADDER_TOP;
-
-            Ladder ladder = tiles[bottomIndex].GetComponent<Ladder>();
-            ladder.bottom = bottomIndex;
-            ladder.top = topIndex;
+            int firstNum = MathUtility.GetRandomNumberNoRepeat(1, _AvailableSlot + 1, temp);
+            int secondNum = MathUtility.GetRandomNumberNoRepeat(1, _AvailableSlot + 1, temp);
+            int[] pairNum = new int[] { firstNum, secondNum };
+            componentsSlot.Enqueue(pairNum);
         }
     }
 
-    private void GenerateLadderIndex()
+    private void GenerateLadder()
     {
-        Debug.Log("tiles count: " + tiles.Count);
-
-        int minBottom = 1;
-        int maxBottom = tiles.Count - _ColCount;
-
-        int finishIndex = tiles.Count - 1;
-        int maxTop = finishIndex - 1;
-        int minTop = _ColCount;
-        
-        while (true)
+        for (int i = 0; i < _LadderCount; i++)
         {
-            if (ladderBottom.Count >= _LadderCount || ladderTop.Count >= _LadderCount)
-                break;
+            int[] pairNum = componentsSlot.Dequeue();
+            System.Array.Sort(pairNum);
+            tiles[pairNum[0]].gameObject.AddComponent<Ladder>();
+            tiles[pairNum[0]].tileType = TILE_TYPE.LADDER_BOTTOM;
+            tiles[pairNum[1]].tileType = TILE_TYPE.LADDER_TOP;
 
-            // Generate ladder bottom index
-            int bottomIndex = MathUtility.GetRandomNumberNoRepeat(minBottom, maxBottom, ladderBottom);
-            ladderBottom.Add(bottomIndex);
-
-            // Generate ladder top index
-            int topIndex = MathUtility.GetRandomNumberNoRepeat(minTop, maxTop, ladderTop);
-            while (topIndex <= bottomIndex || IsOnTheSameRow(topIndex, bottomIndex))
-            {
-                topIndex = MathUtility.GetRandomNumberNoRepeat(minTop, maxTop, ladderTop);
-            }
-            ladderTop.Add(topIndex);
+            Ladder ladder = tiles[pairNum[0]].GetComponent<Ladder>();
+            ladder.bottom = pairNum[0];
+            ladder.top = pairNum[1];
         }
     }
 
-    private bool IsOnTheSameRow(int i, int j)
+    // TODO: Bikin script Snake trus implement function dibawah
+    private void GenerateSnake()
     {
-        return (tiles[i].transform.position.y == tiles[j].transform.position.y);
+        //for (int i = 0; i < _SnakeCount; i++)
+        //{
+        //    int[] pairNum = componentsSlot.Dequeue();
+        //    System.Array.Reverse(pairNum);
+
+        //}
     }
 
+    private bool IsTileComponentsValueValid()
+    {
+        int tileComponentsCount = _LadderCount + _SnakeCount;
+        return (tileComponentsCount <= _AllowedAmountOfTileComponents);
+    }
 }

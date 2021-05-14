@@ -17,7 +17,7 @@ public static class MathUtility
     public static int GetRandomNumberNoRepeat(int min, int max, List<int> collection)
     {
         // If all possible number already generated
-        if (collection.Count == max)
+        if (collection.Count == max - 1)
         {
             Debug.Log("All possible number already generated");
             return -1;
@@ -28,6 +28,7 @@ public static class MathUtility
         {
             randomNumber = GetRandomNumber(min, max);
         }
+        collection.Add(randomNumber);
 
         return randomNumber;
     }
