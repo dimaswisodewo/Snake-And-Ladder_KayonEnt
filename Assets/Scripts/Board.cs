@@ -58,6 +58,7 @@ public class Board : MonoBehaviour
         InstantiateTiles();
         GenerateTileComponentsSlot();
         GenerateLadder();
+        GenerateSnake();
 
         Destroy(_DummyObject);
     }
@@ -174,12 +175,18 @@ public class Board : MonoBehaviour
     // TODO: Bikin script Snake trus implement function dibawah
     private void GenerateSnake()
     {
-        //for (int i = 0; i < _SnakeCount; i++)
-        //{
-        //    int[] pairNum = componentsSlot.Dequeue();
-        //    System.Array.Reverse(pairNum);
+        for (int i = 0; i < _SnakeCount; i++)
+        {
+            int[] pairNum = componentsSlot.Dequeue();
+            System.Array.Sort(pairNum);
+            tiles[pairNum[1]].gameObject.AddComponent<Snake>();
+            tiles[pairNum[1]].tileType = TILE_TYPE.SNAKE_HEAD;
+            tiles[pairNum[0]].tileType = TILE_TYPE.SNAKE_TAIL;
 
-        //}
+            Snake snake = tiles[pairNum[1]].GetComponent<Snake>();
+            snake.head = pairNum[1];
+            snake.tail = pairNum[0];
+        }
     }
 
     private bool IsTileComponentsValueValid()
