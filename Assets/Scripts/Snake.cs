@@ -24,4 +24,20 @@ public class Snake : MonoBehaviour
 
         onMoveFinish?.Invoke();
     }
+
+    public void SetLookAt(Transform lookAt)
+    {
+        Transform snakeObject = null;
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag(Config.SNAKE_TAG))
+            {
+                snakeObject = child;
+                break;
+            }
+        }
+
+        snakeObject.up = lookAt.position - transform.position;
+        snakeObject.Rotate(new Vector3(0f, 0f, 180f), Space.World);
+    }
 }

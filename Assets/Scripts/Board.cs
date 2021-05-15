@@ -8,6 +8,8 @@ public class Board : MonoBehaviour
     
     [Header("Prefabs")]
     [SerializeField] private GameObject _TilePrefab;
+    [SerializeField] private GameObject _LadderPrefab;
+    [SerializeField] private GameObject _SnakePrefab;
 
     [Header("Resolution")]
     [Min(2)]
@@ -166,13 +168,15 @@ public class Board : MonoBehaviour
             tiles[pairNum[0]].tileType = TILE_TYPE.LADDER_BOTTOM;
             tiles[pairNum[1]].tileType = TILE_TYPE.LADDER_TOP;
 
+            Instantiate(_LadderPrefab, tiles[pairNum[0]].transform);
+
             Ladder ladder = tiles[pairNum[0]].GetComponent<Ladder>();
             ladder.bottom = pairNum[0];
             ladder.top = pairNum[1];
+            ladder.SetLookAt(tiles[ladder.top].transform);
         }
     }
 
-    // TODO: Bikin script Snake trus implement function dibawah
     private void GenerateSnake()
     {
         for (int i = 0; i < _SnakeCount; i++)
@@ -183,9 +187,12 @@ public class Board : MonoBehaviour
             tiles[pairNum[1]].tileType = TILE_TYPE.SNAKE_HEAD;
             tiles[pairNum[0]].tileType = TILE_TYPE.SNAKE_TAIL;
 
+            Instantiate(_SnakePrefab, tiles[pairNum[1]].transform);
+
             Snake snake = tiles[pairNum[1]].GetComponent<Snake>();
             snake.head = pairNum[1];
             snake.tail = pairNum[0];
+            snake.SetLookAt(tiles[snake.tail].transform);
         }
     }
 

@@ -24,4 +24,19 @@ public class Ladder : MonoBehaviour
 
         onMoveFinish?.Invoke();
     }
+
+    public void SetLookAt(Transform lookAt)
+    {
+        Transform ladderObject = null;
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag(Config.LADDER_TAG))
+            {
+                ladderObject = child;
+                break;
+            }
+        }
+
+        ladderObject.up = lookAt.position - transform.position;
+    }
 }
