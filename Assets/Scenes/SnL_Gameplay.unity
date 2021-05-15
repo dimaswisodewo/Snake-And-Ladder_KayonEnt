@@ -847,7 +847,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221821719}
-  m_LocalRotation: {x: 0.04018531, y: -0.0484031, z: 0.0019489578, w: 0.9980173}
+  m_LocalRotation: {x: 0.04018529, y: -0.048403136, z: 0.001948958, w: 0.9980173}
   m_LocalPosition: {x: 3.4533374, y: 2.878445, z: -35.518204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1025,10 +1025,10 @@ MonoBehaviour:
   _TilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
   _LadderPrefab: {fileID: 7180416435541507652, guid: 7a8175703c52e4c459a3cd53015ffb31, type: 3}
   _SnakePrefab: {fileID: 1947613886536218421, guid: b4ad758b5d49fcb4ea8c1fe8c4a8485f, type: 3}
-  _RowCount: 10
-  _ColCount: 10
-  _LadderCount: 6
-  _SnakeCount: 6
+  _RowCount: 2
+  _ColCount: 2
+  _LadderCount: 0
+  _SnakeCount: 1
   tiles: []
 --- !u!1 &1352821938
 GameObject:
