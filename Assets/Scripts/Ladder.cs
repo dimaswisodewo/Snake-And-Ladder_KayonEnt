@@ -24,4 +24,25 @@ public class Ladder : MonoBehaviour
 
         onMoveFinish?.Invoke();
     }
+
+    public void SetLookAt(Transform lookAt)
+    {
+        Transform ladderObject = null;
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag(Config.LADDER_TAG))
+            {
+                ladderObject = child;
+                break;
+            }
+        }
+
+        // Set rotation
+        ladderObject.up = lookAt.position - transform.position;
+
+        // Set sprite height and position
+        float distance = Vector3.Distance(ladderObject.position, lookAt.position);
+        ladderObject.GetComponent<SpriteRenderer>().size = new Vector2(1, distance);
+        ladderObject.transform.position += (lookAt.position - transform.position) / 2f;
+    }
 }

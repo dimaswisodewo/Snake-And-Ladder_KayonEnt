@@ -1023,10 +1023,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
+  _LadderPrefab: {fileID: 7180416435541507652, guid: 7a8175703c52e4c459a3cd53015ffb31, type: 3}
+  _SnakePrefab: {fileID: 1947613886536218421, guid: b4ad758b5d49fcb4ea8c1fe8c4a8485f, type: 3}
   _RowCount: 10
   _ColCount: 10
-  _LadderCount: 24
-  _SnakeCount: 25
+  _LadderCount: 6
+  _SnakeCount: 6
   tiles: []
 --- !u!1 &1352821938
 GameObject:

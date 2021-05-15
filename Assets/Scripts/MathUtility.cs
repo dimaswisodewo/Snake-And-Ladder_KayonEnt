@@ -42,6 +42,9 @@ public static class MathUtility
 }
 public static class Config
 {
+    public static string LADDER_TAG = "Ladder";
+    public static string SNAKE_TAG = "Snake";
+
     public static Color32 COLOR_RED = new Color32(243, 76, 83, 255);
     public static Color32 COLOR_GREEN = new Color32(50, 205, 50, 255);
     public static Color32 COLOR_BLUE = new Color32(0, 65, 106, 255);
