@@ -37,7 +37,13 @@ public class Snake : MonoBehaviour
             }
         }
 
+        // Set rotation
         snakeObject.up = lookAt.position - transform.position;
         snakeObject.Rotate(new Vector3(0f, 0f, 180f), Space.World);
+
+        // Set sprite height and position
+        float distance = Vector3.Distance(snakeObject.position, lookAt.position);
+        snakeObject.GetComponent<SpriteRenderer>().size = new Vector2(1, distance);
+        snakeObject.transform.position += (lookAt.position - transform.position) / 2f;
     }
 }

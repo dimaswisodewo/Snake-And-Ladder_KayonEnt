@@ -46,6 +46,12 @@ TagManager:
   - name: Board
     uniqueID: 1216725143
     locked: 0
+  - name: Snake&Ladder
+    uniqueID: 1497361307
+    locked: 0
+  - name: BoardOverlay
+    uniqueID: 435035213
+    locked: 0
   - name: Player
     uniqueID: 2716424311
     locked: 0

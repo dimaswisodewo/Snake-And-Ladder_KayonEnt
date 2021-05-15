@@ -37,6 +37,12 @@ public class Ladder : MonoBehaviour
             }
         }
 
+        // Set rotation
         ladderObject.up = lookAt.position - transform.position;
+
+        // Set sprite height and position
+        float distance = Vector3.Distance(ladderObject.position, lookAt.position);
+        ladderObject.GetComponent<SpriteRenderer>().size = new Vector2(1, distance);
+        ladderObject.transform.position += (lookAt.position - transform.position) / 2f;
     }
 }
