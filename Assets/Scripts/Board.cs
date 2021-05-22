@@ -7,31 +7,31 @@ public class Board : MonoBehaviour
     public static Board Instance;
     
     [Header("Prefabs")]
-    [SerializeField] private GameObject _TilePrefab;
-    [SerializeField] private GameObject _LadderPrefab;
-    [SerializeField] private GameObject _SnakePrefab;
+    [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _ladderPrefab;
+    [SerializeField] private GameObject _snakePrefab;
 
     [Header("Resolution")]
     [Min(2)]
-    [SerializeField] private int _RowCount = 10;
+    [SerializeField] private int _rowCount = 10;
     [Min(2)]
-    [SerializeField] private int _ColCount = 10;
+    [SerializeField] private int _colCount = 10;
 
     [Header("Components")]
     [Min(0)]
-    [SerializeField] private int _LadderCount = 5;
+    [SerializeField] private int _ladderCount = 5;
     [Min(0)]
-    [SerializeField] private int _SnakeCount = 5;
+    [SerializeField] private int _snakeCount = 5;
 
-    private int _AvailableSlot;
-    private int _AllowedAmountOfTileComponents;
+    private int _availableSlot;
+    private int _allowedAmountOfTileComponents;
     
     [Header("Collections")]
     public List<Tile> tiles = new List<Tile>();
     public Queue<int[]> componentsSlot = new Queue<int[]>();
 
-    public int rowCount { get { return _RowCount; } }
-    public int colCount {  get { return _ColCount; } }
+    public int rowCount { get { return _rowCount; } }
+    public int colCount {  get { return _colCount; } }
 
     // Singleton initialization
     private void Awake()
@@ -43,13 +43,13 @@ public class Board : MonoBehaviour
     public void InitializeBoard()
     {
         // Get max amount of snake and ladder allowed
-        _AvailableSlot = (_RowCount * _ColCount) - 2;
-        _AvailableSlot = _AvailableSlot % 2 == 0 ? _AvailableSlot : _AvailableSlot--;
-        _AllowedAmountOfTileComponents = _AvailableSlot / 2;
+        _availableSlot = (_rowCount * _colCount) - 2;
+        _availableSlot = _availableSlot % 2 == 0 ? _availableSlot : _availableSlot--;
+        _allowedAmountOfTileComponents = _availableSlot / 2;
 
         if (!IsTileComponentsValueValid())
         {
-            Debug.LogError("Amount of Ladder and Snake should not exceed " + _AllowedAmountOfTileComponents);
+            Debug.LogError("Amount of Ladder and Snake should not exceed " + _allowedAmountOfTileComponents);
             return;
         }
 
@@ -109,16 +109,16 @@ public class Board : MonoBehaviour
     {
         int iteration = 1;
         bool isReversed = false;
-        for (int i = 0; i < _RowCount; i++)
+        for (int i = 0; i < _rowCount; i++)
         {
-            for (int j = 0; j < _ColCount; j++)
+            for (int j = 0; j < _colCount; j++)
             {
                 // Get new position for instantiated tile
                 Vector2 tilePos;
-                if (isReversed) tilePos = new Vector2((_ColCount - 1) - j, i);
+                if (isReversed) tilePos = new Vector2((_colCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
-                GameObject obj = Instantiate(_TilePrefab);
+                GameObject obj = Instantiate(_tilePrefab);
                 obj.transform.name = "Tile_" + iteration;
                 obj.transform.position = tilePos;
 
@@ -135,14 +135,14 @@ public class Board : MonoBehaviour
 
     private void GenerateTileComponentsSlot()
     {
-        Debug.Log("Ladder Count: " + _LadderCount + ", Snake Count: " + _SnakeCount);
+        Debug.Log("Ladder Count: " + _ladderCount + ", Snake Count: " + _snakeCount);
 
         // Generate tile index pair for ladder or snake
         List<int> temp = new List<int>();
-        while (componentsSlot.Count < _AllowedAmountOfTileComponents)
+        while (componentsSlot.Count < _allowedAmountOfTileComponents)
         {
-            int firstNum = MathUtility.GetRandomNumberNoRepeat(1, _AvailableSlot + 1, temp);
-            int secondNum = MathUtility.GetRandomNumberNoRepeat(1, _AvailableSlot + 1, temp);
+            int firstNum = MathUtility.GetRandomNumberNoRepeat(1, _availableSlot + 1, temp);
+            int secondNum = MathUtility.GetRandomNumberNoRepeat(1, _availableSlot + 1, temp);
             int[] pairNum = new int[] { firstNum, secondNum };
             componentsSlot.Enqueue(pairNum);
         }
@@ -150,7 +150,7 @@ public class Board : MonoBehaviour
 
     private void GenerateLadder()
     {
-        for (int i = 0; i < _LadderCount; i++)
+        for (int i = 0; i < _ladderCount; i++)
         {
             int[] pairNum = componentsSlot.Dequeue();
             System.Array.Sort(pairNum);
@@ -158,7 +158,7 @@ public class Board : MonoBehaviour
             tiles[pairNum[0]].tileType = TILE_TYPE.LADDER_BOTTOM;
             tiles[pairNum[1]].tileType = TILE_TYPE.LADDER_TOP;
 
-            Instantiate(_LadderPrefab, tiles[pairNum[0]].transform);
+            Instantiate(_ladderPrefab, tiles[pairNum[0]].transform);
 
             Ladder ladder = tiles[pairNum[0]].GetComponent<Ladder>();
             ladder.bottom = pairNum[0];
@@ -169,7 +169,7 @@ public class Board : MonoBehaviour
 
     private void GenerateSnake()
     {
-        for (int i = 0; i < _SnakeCount; i++)
+        for (int i = 0; i < _snakeCount; i++)
         {
             int[] pairNum = componentsSlot.Dequeue();
             System.Array.Sort(pairNum);
@@ -177,7 +177,7 @@ public class Board : MonoBehaviour
             tiles[pairNum[1]].tileType = TILE_TYPE.SNAKE_HEAD;
             tiles[pairNum[0]].tileType = TILE_TYPE.SNAKE_TAIL;
 
-            Instantiate(_SnakePrefab, tiles[pairNum[1]].transform);
+            Instantiate(_snakePrefab, tiles[pairNum[1]].transform);
 
             Snake snake = tiles[pairNum[1]].GetComponent<Snake>();
             snake.head = pairNum[1];
@@ -188,7 +188,7 @@ public class Board : MonoBehaviour
 
     private bool IsTileComponentsValueValid()
     {
-        int tileComponentsCount = _LadderCount + _SnakeCount;
-        return (tileComponentsCount <= _AllowedAmountOfTileComponents);
+        int tileComponentsCount = _ladderCount + _snakeCount;
+        return (tileComponentsCount <= _allowedAmountOfTileComponents);
     }
 }
