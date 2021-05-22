@@ -7,7 +7,6 @@ public class Board : MonoBehaviour
     public static Board Instance;
     
     [Header("Prefabs")]
-    [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private GameObject _ladderPrefab;
     [SerializeField] private GameObject _snakePrefab;
 
@@ -118,8 +117,8 @@ public class Board : MonoBehaviour
                 if (isReversed) tilePos = new Vector2((_colCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
-                GameObject obj = Instantiate(_tilePrefab);
-                obj.transform.name = "Tile_" + iteration;
+                GameObject obj = ObjectPool.Instance.GetFromPool();
+                obj.transform.name = string.Concat("Tile_", iteration);
                 obj.transform.position = tilePos;
 
                 Tile tile = obj.GetComponent<Tile>();

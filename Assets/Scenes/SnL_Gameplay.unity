@@ -291,8 +291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89982c4a91cab1c44adb992a5cc2b3ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _DiceText: {fileID: 1471633121}
-  _RollButton: {fileID: 814311159}
+  _diceText: {fileID: 1471633121}
+  _rollButton: {fileID: 814311159}
   diceNumber: 0
   onRollDiceFinished:
     m_PersistentCalls:
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d0807676a243645824d7affc96ebd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PlayerText: {fileID: 325608029}
+  _playerText: {fileID: 325608029}
 --- !u!1 &278376076
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,9 +475,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12406499317807418d0eca7357919da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _PlayerPrefab: {fileID: 2817623720893679970, guid: 772eab0dfc8237e4997952e98dc67191, type: 3}
-  _PlayerToSpawn: 6
-  _NumOfActivePlayer: 0
+  _playerPrefab: {fileID: 2817623720893679970, guid: 772eab0dfc8237e4997952e98dc67191, type: 3}
+  _playerToSpawn: 6
+  numOfActivePlayer: 0
   players: []
 --- !u!1 &325608027
 GameObject:
@@ -530,7 +530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -847,7 +847,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221821719}
-  m_LocalRotation: {x: 0.04018531, y: -0.0484031, z: 0.0019489578, w: 0.9980173}
+  m_LocalRotation: {x: 0.04018529, y: -0.048403136, z: 0.001948958, w: 0.9980173}
   m_LocalPosition: {x: 3.4533374, y: 2.878445, z: -35.518204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -868,8 +868,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f1fa6118fe5ba548a9fe2b3be865e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _CameraLookAt: {fileID: 1175958323}
-  _CineCam: {fileID: 1221821720}
+  _cameraLookAt: {fileID: 1175958323}
+  _cineCam: {fileID: 1221821720}
 --- !u!1 &1272007081
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +879,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1272007082}
+  - component: {fileID: 1272007083}
   m_Layer: 0
   m_Name: ObjectPool
   m_TagString: Untagged
@@ -900,6 +901,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1272007083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272007081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc15897ae0ff73842aba875e8a429d66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
+  _amount: 200
 --- !u!1 &1291668316
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,7 +926,6 @@ GameObject:
   - component: {fileID: 1291668317}
   - component: {fileID: 1291668318}
   - component: {fileID: 1291668320}
-  - component: {fileID: 1291668319}
   m_Layer: 5
   m_Name: LeftPanel
   m_TagString: Untagged
@@ -966,36 +980,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1291668319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1291668316}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.19607843}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1291668320
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1052,13 +1036,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24a7733798cbf1429c620e80f8bd62a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
-  _LadderPrefab: {fileID: 7180416435541507652, guid: 7a8175703c52e4c459a3cd53015ffb31, type: 3}
-  _SnakePrefab: {fileID: 1947613886536218421, guid: b4ad758b5d49fcb4ea8c1fe8c4a8485f, type: 3}
-  _RowCount: 10
-  _ColCount: 10
-  _LadderCount: 5
-  _SnakeCount: 5
+  _tilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
+  _ladderPrefab: {fileID: 7180416435541507652, guid: 7a8175703c52e4c459a3cd53015ffb31, type: 3}
+  _snakePrefab: {fileID: 1947613886536218421, guid: b4ad758b5d49fcb4ea8c1fe8c4a8485f, type: 3}
+  _rowCount: 10
+  _colCount: 10
+  _ladderCount: 5
+  _snakeCount: 5
   tiles: []
 --- !u!1 &1352821938
 GameObject:
@@ -1089,10 +1073,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd52a5f1e3552e4eb0df1b4064cd29e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Board: {fileID: 1323043905}
-  _Dice: {fileID: 216680659}
-  _CamController: {fileID: 1221821722}
-  _PlayerManager: {fileID: 278376078}
+  _board: {fileID: 1323043905}
+  _dice: {fileID: 216680659}
+  _camController: {fileID: 1221821722}
+  _playerManager: {fileID: 278376078}
+  _objectPool: {fileID: 0}
 --- !u!4 &1352821940
 Transform:
   m_ObjectHideFlags: 0
@@ -1158,7 +1143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.06774927, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

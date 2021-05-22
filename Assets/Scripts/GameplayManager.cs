@@ -23,6 +23,7 @@ public class GameplayManager : MonoBehaviour
 
     private void InitializeGameComponent()
     {
+        ObjectPool.Instance.InstantiateObjectPool();
         _board.InitializeBoard();
         _playerManager.InitializePlayer();
 
