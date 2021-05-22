@@ -51,7 +51,7 @@ public class PlayerManager : MonoBehaviour
 
     private void InstantiatePlayer(int index)
     {
-        GameObject obj = Instantiate(_PlayerPrefab, transform);
+        GameObject obj = Instantiate(_PlayerPrefab);
         obj.name = "Player_" + (index + 1);
 
         Player player = obj.GetComponent<Player>();

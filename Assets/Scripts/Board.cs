@@ -23,7 +23,6 @@ public class Board : MonoBehaviour
     [Min(0)]
     [SerializeField] private int _SnakeCount = 5;
 
-    private GameObject _DummyObject;
     private int _AvailableSlot;
     private int _AllowedAmountOfTileComponents;
     
@@ -54,15 +53,10 @@ public class Board : MonoBehaviour
             return;
         }
 
-        if (_DummyObject == null)
-            _DummyObject = new GameObject();
-
         InstantiateTiles();
         GenerateTileComponentsSlot();
         GenerateLadder();
         GenerateSnake();
-
-        Destroy(_DummyObject);
     }
 
     // TODO: Refactor function ini kalo sempet
@@ -117,10 +111,6 @@ public class Board : MonoBehaviour
         bool isReversed = false;
         for (int i = 0; i < _RowCount; i++)
         {
-            GameObject row = Instantiate(_DummyObject, transform);
-            row.transform.name = "Row_" + i;
-            row.transform.position = new Vector2(0, i);
-
             for (int j = 0; j < _ColCount; j++)
             {
                 // Get new position for instantiated tile
@@ -128,7 +118,7 @@ public class Board : MonoBehaviour
                 if (isReversed) tilePos = new Vector2((_ColCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
-                GameObject obj = Instantiate(_TilePrefab, row.transform);
+                GameObject obj = Instantiate(_TilePrefab);
                 obj.transform.name = "Tile_" + iteration;
                 obj.transform.position = tilePos;
 
