@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 2817623722989334584}
   tilePosition: 0
+  hasWin: 0
 --- !u!1 &2817623722989334586
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +116,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1578542985
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 381525fc6216519499795d47235aa20c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -55,14 +55,21 @@ public class GameplayManager : MonoBehaviour
         Debug.Log("GAME IS OVER!!!");
     }
 
-    private void OnPlayerStartMoving(Player player = null)
+    // On player start moving according to dice number
+    private void OnPlayerStartJumping(Player player = null)
     {
         _Dice.SetActiveRollDiceButton(false);
     }
 
-    private void OnPlayerFinishMoving(Player player = null)
+    // On player finish moving according to dice number
+    private void OnPlayerFinishJumping(Player player = null)
     {
         PlayerTilePositionChecking(player);
+    }
+
+    // On player finish moved by ladder or snake
+    private void OnPlayerFinishMoving(Player player = null)
+    {
         _Dice.SetActiveRollDiceButton(true);
         UIManager.Instance.SetPlayerText("PLAYER " + (_PlayerManager.CurrentlyPlayingIndex + 1));
     }
@@ -74,19 +81,20 @@ public class GameplayManager : MonoBehaviour
         {
             case TILE_TYPE.LADDER_BOTTOM:
                 Ladder ladder = tile.GetComponent<Ladder>();
-                ladder.MovePlayerToTop(player);
+                ladder.MovePlayerToTop(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = ladder.top;
                 Debug.Log("Climb, Tile: " + ladder.bottom + " to " + ladder.top + ", Type: " + tile.tileType);
                 break;
 
             case TILE_TYPE.SNAKE_HEAD:
                 Snake snake = tile.GetComponent<Snake>();
-                snake.MovePlayerToTail(player);
+                snake.MovePlayerToTail(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = snake.tail;
                 Debug.Log("Eaten, Tile: " + snake.head + " to " + snake.tail + ", Type: " + tile.tileType);
                 break;
 
             default:
+                OnPlayerFinishMoving();
                 Debug.Log("No Action, Tile: " + player.tilePosition + ", Type: " + tile.tileType);
                 break;
         }
@@ -104,7 +112,7 @@ public class GameplayManager : MonoBehaviour
         Queue<Vector2> stepQueue = _Board.GetStepQueue(player, player.tilePosition, _Dice.diceNumber);
 
         // Move currently playing player step by step to destination tile
-        player.JumpStepByStep(stepQueue, () => OnPlayerStartMoving(), () => OnPlayerFinishMoving(player));
+        player.JumpStepByStep(stepQueue, () => OnPlayerStartJumping(), () => OnPlayerFinishJumping(player));
 
         // Check if player is on last tile
         if (HasPlayerWin(player))
