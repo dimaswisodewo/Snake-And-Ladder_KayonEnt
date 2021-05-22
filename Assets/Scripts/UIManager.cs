@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    [SerializeField] private Text _PlayerText;
+    [SerializeField] private Text _playerText;
 
     // Singleton initialization
     private void Awake()
@@ -17,6 +17,6 @@ public class UIManager : MonoBehaviour
 
     public void SetPlayerText(string inputString)
     {
-        _PlayerText.text = inputString;
+        _playerText.text = inputString;
     }
 }

@@ -5,11 +5,11 @@ using TMPro;
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _TextMesh;
+    [SerializeField] private TextMeshProUGUI _textMesh;
     public TILE_TYPE tileType = TILE_TYPE.TILE;
 
     public void SetText(string text)
     {
-        _TextMesh.text = text;
+        _textMesh.text = text;
     }
 }

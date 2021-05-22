@@ -6,8 +6,8 @@ using UnityEngine.Events;
 
 public class Dice : MonoBehaviour
 {
-    [SerializeField] private Text _DiceText;
-    [SerializeField] private Button _RollButton;
+    [SerializeField] private Text _diceText;
+    [SerializeField] private Button _rollButton;
     public int diceNumber;
 
     [Header("Events")]
@@ -23,11 +23,11 @@ public class Dice : MonoBehaviour
 
     public void SetActiveRollDiceButton(bool setActive)
     {
-        _RollButton.interactable = setActive;
+        _rollButton.interactable = setActive;
     }
 
     private void SetDiceText(string newText)
     {
-        _DiceText.text = newText;
+        _diceText.text = newText;
     }
 }
