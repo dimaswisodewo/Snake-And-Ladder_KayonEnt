@@ -7,7 +7,6 @@ public class Board : MonoBehaviour
     public static Board Instance;
     
     [Header("Prefabs")]
-    [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private GameObject _ladderPrefab;
     [SerializeField] private GameObject _snakePrefab;
 
@@ -42,17 +41,6 @@ public class Board : MonoBehaviour
 
     public void InitializeBoard()
     {
-        // Get max amount of snake and ladder allowed
-        _availableSlot = (_rowCount * _colCount) - 2;
-        _availableSlot = _availableSlot % 2 == 0 ? _availableSlot : _availableSlot--;
-        _allowedAmountOfTileComponents = _availableSlot / 2;
-
-        if (!IsTileComponentsValueValid())
-        {
-            Debug.LogError("Amount of Ladder and Snake should not exceed " + _allowedAmountOfTileComponents);
-            return;
-        }
-
         InstantiateTiles();
         GenerateTileComponentsSlot();
         GenerateLadder();
@@ -118,8 +106,8 @@ public class Board : MonoBehaviour
                 if (isReversed) tilePos = new Vector2((_colCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
-                GameObject obj = Instantiate(_tilePrefab);
-                obj.transform.name = "Tile_" + iteration;
+                GameObject obj = ObjectPool.Instance.GetFromPool();
+                obj.transform.name = string.Concat("Tile_", iteration);
                 obj.transform.position = tilePos;
 
                 Tile tile = obj.GetComponent<Tile>();
@@ -186,9 +174,45 @@ public class Board : MonoBehaviour
         }
     }
 
-    private bool IsTileComponentsValueValid()
+    public bool IsBoardConfigurationValid()
     {
+        if (UIManager.Instance.IsBoardConfigFieldEmpty())
+        {
+            UIManager.Instance.SetBoardConfigNotValidText(Config.INPUT_FIELD_EMPTY);
+            return false;
+        }
+
+        // Get max amount of snake and ladder allowed
+        _rowCount = UIManager.Instance.GetRowCountInputFieldValue();
+        _colCount = UIManager.Instance.GetColCountInputFieldValue();
+
+        if (_rowCount < 2 || _colCount < 2)
+        {
+            UIManager.Instance.SetBoardConfigNotValidText(Config.BOARD_TILE_NOT_VALID_MESSAGE);
+            return false;
+        }
+
+        _ladderCount = UIManager.Instance.GetLadderCountInputFieldValue();
+        _snakeCount = UIManager.Instance.GetSnakeCountInputFieldValue();
+
+        if (_ladderCount < 0 || _snakeCount < 0)
+        {
+            UIManager.Instance.SetBoardConfigNotValidText(Config.BOARD_SNAKE_LADDER_NOT_VALID_MESSAGE);
+            return false;
+        }
+
+        _availableSlot = (_rowCount * _colCount) - 2;
+        _availableSlot = _availableSlot % 2 == 0 ? _availableSlot : _availableSlot--;
+        _allowedAmountOfTileComponents = _availableSlot / 2;
+
         int tileComponentsCount = _ladderCount + _snakeCount;
-        return (tileComponentsCount <= _allowedAmountOfTileComponents);
+
+        if (tileComponentsCount > _allowedAmountOfTileComponents)
+        {
+            UIManager.Instance.SetBoardConfigNotValidText(Config.BOARD_CONFIG_NOT_VALID_MESSAGE + " " + _allowedAmountOfTileComponents);
+            return false;
+        }
+
+        return true;
     }
 }
