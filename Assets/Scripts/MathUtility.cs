@@ -14,6 +14,11 @@ public static class MathUtility
         return Random.Range(min, max);
     }
 
+    public static int StringToInt(string inputString)
+    {
+        return int.Parse(inputString);
+    }
+
     public static int GetRandomNumberNoRepeat(int min, int max, List<int> collection)
     {
         // If all possible number already generated
@@ -44,6 +49,11 @@ public static class Config
 {
     public static string LADDER_TAG = "Ladder";
     public static string SNAKE_TAG = "Snake";
+
+    public static string INPUT_FIELD_EMPTY = "Input Field cannot be empty!";
+    public static string BOARD_TILE_NOT_VALID_MESSAGE = "The minimum amount of Row x Column are 2 x 2";
+    public static string BOARD_SNAKE_LADDER_NOT_VALID_MESSAGE = "The minimum amount of Snake or Ladder are zero";
+    public static string BOARD_CONFIG_NOT_VALID_MESSAGE = "The amount of Ladder and Snake should not exceed";
 
     public static Color32 COLOR_RED = new Color32(243, 76, 83, 255);
     public static Color32 COLOR_GREEN = new Color32(50, 205, 50, 255);

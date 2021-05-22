@@ -52,7 +52,7 @@ public class PlayerManager : MonoBehaviour
     private void InstantiatePlayer(int index)
     {
         GameObject obj = Instantiate(_playerPrefab);
-        obj.name = "Player_" + (index + 1);
+        obj.name = string.Concat("Player_", (index + 1));
 
         Player player = obj.GetComponent<Player>();
         player.SetSpriteColor((COLOR)index);

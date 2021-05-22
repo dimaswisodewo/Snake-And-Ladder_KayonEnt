@@ -12,13 +12,13 @@ public class GameplayManager : MonoBehaviour
     public delegate void OnGameIsOver();
     public static event OnGameIsOver onGameIsOver;
 
-    private void Awake()
+    public void OnGenerateButtonClick()
     {
-        InitializeGameComponent();
-
-        UIManager.Instance.SetPlayerText(string.Concat("PLAYER ", _playerManager.CurrentlyPlayingIndex + 1));
-
-        onGameIsOver += GameIsOver;
+        if (_board.IsBoardConfigurationValid())
+        {
+            UIManager.Instance.SetActiveBoardCustomizationPanel(false);
+            InitializeGameComponent();
+        }
     }
 
     private void InitializeGameComponent()
@@ -26,11 +26,15 @@ public class GameplayManager : MonoBehaviour
         ObjectPool.Instance.InstantiateObjectPool();
         _board.InitializeBoard();
         _playerManager.InitializePlayer();
+        
+        UIManager.Instance.SetPlayerText(string.Concat("PLAYER ", _playerManager.CurrentlyPlayingIndex + 1));
 
         // Centering camera follow position relative to Board
         Vector2 camLookAtPos = new Vector2((_board.colCount / 2f) -
             0.5f, (_board.rowCount / 2f) - 0.5f);
         _camController.SetCameraLookAtPosition(camLookAtPos);
+
+        onGameIsOver += GameIsOver;
     }
 
     private bool HasPlayerWin(Player inputPlayer)
