@@ -23,16 +23,15 @@ public class GameplayManager : MonoBehaviour
 
     private void InitializeGameComponent()
     {
-        ObjectPool.Instance.InstantiateObjectPool();
         _board.InitializeBoard();
         _playerManager.InitializePlayer();
         
         UIManager.Instance.SetPlayerText(string.Concat("PLAYER ", _playerManager.CurrentlyPlayingIndex + 1));
 
         // Centering camera follow position relative to Board
-        Vector2 camLookAtPos = new Vector2((_board.colCount / 2f) -
+        Vector2 camFollowPos = new Vector2((_board.colCount / 2f) -
             0.5f, (_board.rowCount / 2f) - 0.5f);
-        _camController.SetCameraLookAtPosition(camLookAtPos);
+        _camController.SetCameraLookAtPosition(camFollowPos);
 
         onGameIsOver += GameIsOver;
     }

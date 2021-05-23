@@ -10,7 +10,7 @@ public class ObjectPool : MonoBehaviour
     [SerializeField] private GameObject _tilePrefab;
 
     [Header("Configuration")]
-    [SerializeField] private int _amount = 200;
+    [SerializeField] private int _amount = 500;
 
     private Stack<GameObject> _objectPool = new Stack<GameObject>();
     private Vector2 _poolPosition = new Vector2(-999, -999);
@@ -19,6 +19,8 @@ public class ObjectPool : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+
+        InstantiateObjectPool();
     }
 
     public void InstantiateObjectPool()
@@ -39,11 +41,10 @@ public class ObjectPool : MonoBehaviour
 
     public GameObject GetFromPool()
     {
-        if (_objectPool.Peek() == null)
+        if (_objectPool.Count == 100)
         {
-            Debug.Log("Object pool is empty, instantiating more object to pool");
+            Debug.Log("pool almost empty, instantiating more object");
             InstantiateObjectPool();
-            return null;
         }
 
         GameObject go = _objectPool.Pop();
