@@ -1877,7 +1877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
-  _amount: 200
+  _amount: 1000
 --- !u!1 &1281089892
 GameObject:
   m_ObjectHideFlags: 0
