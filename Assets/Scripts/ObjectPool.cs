@@ -19,6 +19,8 @@ public class ObjectPool : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+
+        InstantiateObjectPool();
     }
 
     public void InstantiateObjectPool()
