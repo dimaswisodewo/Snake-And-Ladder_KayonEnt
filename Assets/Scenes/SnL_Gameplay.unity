@@ -2384,6 +2384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 7639142839827607715, guid: b819ab9111196ce4bb3160ac2c11e42f, type: 3}
   _amount: 1000
+  _poolPosition: {x: -999, y: -999}
 --- !u!1 &1281089892
 GameObject:
   m_ObjectHideFlags: 0
@@ -3600,7 +3601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2134254861
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3665,9 +3666,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1352821939}
         m_TargetAssemblyTypeName: GameplayManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: OnBackButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -38,7 +38,15 @@ public class Board : MonoBehaviour
 
     public void InitializeBoard()
     {
-        InstantiateTiles();
+        if (tiles.Count > 0)
+        {
+            foreach (Tile tile in tiles)
+            {
+                ObjectPool.Instance.SendTileToPool(tile.gameObject);
+            }
+        }
+
+        GenerateTiles();
         RandomizeBoardComponents();
     }
 
@@ -51,7 +59,8 @@ public class Board : MonoBehaviour
 
     public void FinishBoardComponentPlacement()
     {
-        for (int i = 0; i < ladderSlot.Count; i++)
+        int count = ladderSlot.Count;
+        for (int i = 0; i < count; i++)
         {
             int[] pairNum = ladderSlot.Dequeue();
             tiles[pairNum[0]].gameObject.AddComponent<Ladder>();
@@ -63,7 +72,8 @@ public class Board : MonoBehaviour
             ladder.top = pairNum[1];
         }
 
-        for (int i = 0; i < snakeSlot.Count; i++)
+        count = snakeSlot.Count;
+        for (int i = 0; i < count; i++)
         {
             int[] pairNum = snakeSlot.Dequeue();
             tiles[pairNum[1]].gameObject.AddComponent<Snake>();
@@ -122,8 +132,9 @@ public class Board : MonoBehaviour
         return stepQueue;
     }
 
-    private void InstantiateTiles()
+    private void GenerateTiles()
     {
+        tiles.Clear();
         int iteration = 1;
         bool isReversed = false;
         for (int i = 0; i < _rowCount; i++)
@@ -135,7 +146,7 @@ public class Board : MonoBehaviour
                 if (isReversed) tilePos = new Vector2((_colCount - 1) - j, i);
                 else tilePos = new Vector2(j, i);
 
-                GameObject obj = ObjectPool.Instance.GetFromPool();
+                GameObject obj = ObjectPool.Instance.GetTileFromPool();
                 obj.transform.name = string.Concat("Tile_", iteration);
                 obj.transform.position = tilePos;
 
@@ -227,6 +238,15 @@ public class Board : MonoBehaviour
         float distance = Vector3.Distance(snake.position, lookAt.position);
         snake.GetComponent<SpriteRenderer>().size = new Vector2(1, distance);
         snake.position += (lookAt.position - snake.position) / 2f;
+    }
+
+    public void ResetBoardComponentPosition()
+    {
+        foreach (GameObject ladder in ladders)
+            ladder.transform.position = ObjectPool.Instance._poolPosition;
+
+        foreach (GameObject snake in snakes)
+            snake.transform.position = ObjectPool.Instance._poolPosition;
     }
 
     public bool IsBoardConfigurationValid()

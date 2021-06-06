@@ -44,6 +44,15 @@ public class GameplayManager : MonoBehaviour
         onGameIsOver += GameIsOver;
     }
 
+    public void OnBackButtonClick()
+    {
+        _board.ResetBoardComponentPosition();
+
+        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
+        UIManager.Instance.SetBoardConfigNotValidText(string.Empty);
+    }
+
     private bool HasPlayerWin(Player inputPlayer)
     {
         if (inputPlayer.tilePosition == _board.tiles.Count - 1) return true;
