@@ -17,23 +17,40 @@ public class GameplayManager : MonoBehaviour
         if (_board.IsBoardConfigurationValid())
         {
             UIManager.Instance.SetActiveBoardCustomizationPanel(false);
-            InitializeGameComponent();
+            UIManager.Instance.SetActiveBoardComponentCustomizationPanel(true);
+
+            _board.InitializeBoard();
+
+            // Centering camera follow position relative to Board
+            Vector2 camFollowPos = new Vector2((_board.ColCount / 2f) -
+                0.5f, (_board.RowCount / 2f) - 0.5f);
+            _camController.SetCameraLookAtPosition(camFollowPos);
         }
     }
 
-    private void InitializeGameComponent()
+    public void OnRandomizeGameComponentButtonClick()
     {
-        _board.InitializeBoard();
+        _board.RandomizeBoardComponents();
+    }
+
+    public void OnStartPlayButtonClick()
+    {
+        _board.FinishBoardComponentPlacement();
         _playerManager.InitializePlayer();
-        
+
+        UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
         UIManager.Instance.SetPlayerText(string.Concat("PLAYER ", _playerManager.CurrentlyPlayingIndex + 1));
 
-        // Centering camera follow position relative to Board
-        Vector2 camFollowPos = new Vector2((_board.colCount / 2f) -
-            0.5f, (_board.rowCount / 2f) - 0.5f);
-        _camController.SetCameraLookAtPosition(camFollowPos);
-
         onGameIsOver += GameIsOver;
+    }
+
+    public void OnBackButtonClick()
+    {
+        _board.ResetBoardComponentPosition();
+
+        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
+        UIManager.Instance.SetBoardConfigNotValidText(string.Empty);
     }
 
     private bool HasPlayerWin(Player inputPlayer)

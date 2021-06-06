@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
     [SerializeField] private GameObject _boardCustomizationPanel;
+    [SerializeField] private GameObject _boardComponentCustomizationPanel;
     [SerializeField] private Text _playerText;
 
     [Header("Board Customization")]
@@ -21,6 +22,9 @@ public class UIManager : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+
+        SetActiveBoardCustomizationPanel(true);
+        SetActiveBoardComponentCustomizationPanel(false);
     }
 
     public void SetPlayerText(string inputString)
@@ -62,6 +66,11 @@ public class UIManager : MonoBehaviour
     public void SetActiveBoardCustomizationPanel(bool setActive)
     {
         _boardCustomizationPanel.SetActive(setActive);
+    }
+
+    public void SetActiveBoardComponentCustomizationPanel(bool setActive)
+    {
+        _boardComponentCustomizationPanel.SetActive(setActive);
     }
 
     public void SetBoardConfigNotValidText(string inputString)
