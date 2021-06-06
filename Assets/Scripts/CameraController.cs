@@ -35,18 +35,22 @@ public class CameraController : MonoBehaviour
             if (_mouseInitialPos != _mouseCurrentPos)
             {
                 Vector2 camCurrentPos = _cameraFollow.transform.position;
-                _cameraFollow.transform.position = camCurrentPos + (new Vector2(_mouseInitialPos.x - _mouseCurrentPos.x, _mouseInitialPos.y - _mouseCurrentPos.y) * _cameraPanSpeed);
+                Vector2 camToPos = camCurrentPos + (new Vector2(_mouseInitialPos.x - _mouseCurrentPos.x, _mouseInitialPos.y - _mouseCurrentPos.y) * _cameraPanSpeed);
+
+                _cameraFollow.transform.position = SetCameraPanClamping(camToPos);
             }
 
             _mouseInitialPos = Input.mousePosition;
         }
     }
 
-    // TODO clamp camera follow position based on board size
-    //public void SetCameraPanClamping()
-    //{
+    public Vector2 SetCameraPanClamping(Vector2 position)
+    {
+        float posX = Mathf.Clamp(position.x, 0f, Board.Instance.RowCount);
+        float posY = Mathf.Clamp(position.y, 0f, Board.Instance.ColCount);
 
-    //}
+        return new Vector2(posX, posY);
+    }
 
     public void SetCameraFollow(Transform follow)
     {
