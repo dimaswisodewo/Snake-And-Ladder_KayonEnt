@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
 
+        SetPlayerText(string.Empty);
         SetActiveBoardCustomizationPanel(true);
         SetActiveBoardComponentCustomizationPanel(false);
     }

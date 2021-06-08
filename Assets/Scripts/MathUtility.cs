@@ -50,10 +50,17 @@ public static class Config
     public static string LADDER_TAG = "Ladder";
     public static string SNAKE_TAG = "Snake";
 
-    public static string INPUT_FIELD_EMPTY = "Input Field cannot be empty!";
-    public static string BOARD_TILE_NOT_VALID_MESSAGE = "The minimum amount of Row x Column are 2 x 2";
-    public static string BOARD_SNAKE_LADDER_NOT_VALID_MESSAGE = "The minimum amount of Snake or Ladder are zero";
-    public static string BOARD_CONFIG_NOT_VALID_MESSAGE = "The amount of Ladder and Snake should not exceed ";
+    public static string INPUT_FIELD_EMPTY = "Eh, masih ada yang belum diisi tuh!";
+    public static string BOARD_TILE_NOT_VALID_MESSAGE = "Jumlah baris atau kolom paling sedikit setidaknya 2 ya!";
+    public static string BOARD_SNAKE_LADDER_NOT_VALID_MESSAGE = "jumlah ular atau tangga paling sedikit setidaknya 0 ya!";
+    public static string BOARD_CONFIG_NOT_VALID_MESSAGE = "Jumlah keseluruhan ular dan tangga jangan sampai lebih dari ";
+
+    public static string TEXT_RED = "Merah";
+    public static string TEXT_GREEN = "Hijau";
+    public static string TEXT_BLUE = "Biru";
+    public static string TEXT_YELLOW = "Kuning";
+    public static string TEXT_PURPLE = "Ungu";
+    public static string TEXT_PINK = "Merah Muda";
 
     public static Color32 COLOR_RED = new Color32(243, 76, 83, 255);
     public static Color32 COLOR_GREEN = new Color32(50, 205, 50, 255);
@@ -99,6 +106,42 @@ public static class Config
         return newColor;
     }
 
+    public static string GetPlayerText(COLOR color)
+    {
+        string playerText = string.Empty;
+        switch (color)
+        {
+            case COLOR.RED:
+                playerText = TEXT_RED;
+                break;
+
+            case COLOR.GREEN:
+                playerText = TEXT_GREEN;
+                break;
+
+            case COLOR.BLUE:
+                playerText = TEXT_BLUE;
+                break;
+
+            case COLOR.YELLOW:
+                playerText = TEXT_YELLOW;
+                break;
+
+            case COLOR.PURPLE:
+                playerText = TEXT_PURPLE;
+                break;
+
+            case COLOR.PINK:
+                playerText = TEXT_PINK;
+                break;
+
+            default:
+                playerText = TEXT_RED;
+                break;
+        }
+
+        return playerText;
+    }
 }
 
 public enum COLOR
