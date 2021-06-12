@@ -8,6 +8,7 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Dice _dice;
     [SerializeField] private CameraController _camController;
     [SerializeField] private PlayerManager _playerManager;
+    [SerializeField] private PlayerTag _playerTag;
 
     public delegate void OnGameIsOver();
     public static event OnGameIsOver onGameIsOver;
@@ -28,6 +29,14 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void OnPlayerCustomizationDoneButtonClick()
+    {
+        UIManager.Instance.SetActivePlayerCustomizationPanel(false);
+        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+
+        _playerManager.playerToSpawn = UIManager.Instance.GetPlayerCount();
+    }
+
     public void OnRandomizeGameComponentButtonClick()
     {
         _board.RandomizeBoardComponents();
@@ -37,9 +46,11 @@ public class GameplayManager : MonoBehaviour
     {
         _board.FinishBoardComponentPlacement();
         _playerManager.InitializePlayer();
+        _playerTag.gameObject.SetActive(true);
+        _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
         UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
-        UIManager.Instance.SetPlayerText(Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex));
+        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
 
         onGameIsOver += GameIsOver;
     }
@@ -80,6 +91,7 @@ public class GameplayManager : MonoBehaviour
     private void OnPlayerStartJumping()
     {
         _dice.SetActiveRollDiceButton(false);
+        _playerTag.gameObject.SetActive(false);
     }
 
     // On player finish moving according to dice number
@@ -92,7 +104,10 @@ public class GameplayManager : MonoBehaviour
     private void OnPlayerFinishMoving()
     {
         _dice.SetActiveRollDiceButton(true);
-        UIManager.Instance.SetPlayerText(Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex));
+        _playerTag.gameObject.SetActive(true);
+        _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
+
+        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
     }
 
     private void PlayerTilePositionChecking(Player player)
