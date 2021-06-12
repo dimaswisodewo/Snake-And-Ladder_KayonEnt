@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+    [SerializeField] private GameObject _playerCustomizationPanel;
     [SerializeField] private GameObject _boardCustomizationPanel;
     [SerializeField] private GameObject _boardComponentCustomizationPanel;
     [SerializeField] private Text _playerText;
@@ -17,13 +18,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private InputField _snakeCountIF;
     [SerializeField] private Text _notValidText;
 
+    [Header("Player Customization")]
+    [SerializeField] private Text _playerCountText;
+
     // Singleton initialization
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
 
-        SetActiveBoardCustomizationPanel(true);
+        SetPlayerText(string.Empty);
+        SetPlayerCountText(Config.MIN_PLAYER_COUNT.ToString());
+        SetActivePlayerCustomizationPanel(true);
+        SetActiveBoardCustomizationPanel(false);
         SetActiveBoardComponentCustomizationPanel(false);
     }
 
@@ -63,6 +70,11 @@ public class UIManager : MonoBehaviour
         return MathUtility.StringToInt(_snakeCountIF.text);
     }
 
+    public void SetActivePlayerCustomizationPanel(bool setActive)
+    {
+        _playerCustomizationPanel.SetActive(setActive);
+    }
+
     public void SetActiveBoardCustomizationPanel(bool setActive)
     {
         _boardCustomizationPanel.SetActive(setActive);
@@ -76,5 +88,33 @@ public class UIManager : MonoBehaviour
     public void SetBoardConfigNotValidText(string inputString)
     {
         _notValidText.text = inputString;
+    }
+
+    public void OnIncrementPlayerButtonClick()
+    {
+        int playerCount = GetPlayerCount();
+        playerCount++;
+        playerCount = MathUtility.ClampNumber(playerCount, Config.MIN_PLAYER_COUNT, Config.MAX_PLAYER_COUNT);
+
+        SetPlayerCountText(playerCount.ToString());
+    }
+
+    public void OnDecrementPlayerButtonClick()
+    {
+        int playerCount = GetPlayerCount();
+        playerCount--;
+        playerCount = MathUtility.ClampNumber(playerCount, Config.MIN_PLAYER_COUNT, Config.MAX_PLAYER_COUNT);
+
+        SetPlayerCountText(playerCount.ToString());
+    }
+
+    private void SetPlayerCountText(string inputString)
+    {
+        _playerCountText.text = inputString;
+    }
+
+    public int GetPlayerCount()
+    {
+        return int.Parse(_playerCountText.text);
     }
 }

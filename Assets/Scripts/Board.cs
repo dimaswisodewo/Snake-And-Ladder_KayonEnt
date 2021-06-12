@@ -284,7 +284,7 @@ public class Board : MonoBehaviour
 
         if (tileComponentsCount > _allowedAmountOfTileComponents)
         {
-            UIManager.Instance.SetBoardConfigNotValidText(Config.BOARD_CONFIG_NOT_VALID_MESSAGE + _allowedAmountOfTileComponents);
+            UIManager.Instance.SetBoardConfigNotValidText(Config.BOARD_CONFIG_NOT_VALID_MESSAGE + _allowedAmountOfTileComponents + " ya!"); // TODO never ever ever ever nge-hardcode string, kapan-kapan rapihin!
             return false;
         }
 

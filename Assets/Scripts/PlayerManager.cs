@@ -7,8 +7,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject _playerPrefab;
     private int _currentlyPlayingIndex = 0;
     
-    [Range(1, 6)]
-    public int _playerToSpawn = 2;
+    [HideInInspector]
+    public int playerToSpawn = 2;
 
     [HideInInspector]
     public int numOfActivePlayer;
@@ -16,17 +16,14 @@ public class PlayerManager : MonoBehaviour
 
     public int CurrentlyPlayingIndex { get { return _currentlyPlayingIndex; } }
 
-    private void Awake()
-    {
-        numOfActivePlayer = _playerToSpawn;
-    }
-
     public void InitializePlayer()
     {
-        for (int i = 0; i < _playerToSpawn; i++)
+        for (int i = 0; i < playerToSpawn; i++)
         {
             InstantiatePlayer(i);
         }
+
+        numOfActivePlayer = playerToSpawn;
     }
 
     public Player GetCurrentPlayingPlayer()
