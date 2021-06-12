@@ -10,6 +10,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private PlayerTag _playerTag;
 
+    private int _historyFrom;
+    private int _historyTo;
+
     public delegate void OnGameIsOver();
     public static event OnGameIsOver onGameIsOver;
 
@@ -50,7 +53,7 @@ public class GameplayManager : MonoBehaviour
         _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
         UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
-        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
+        UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex +1).ToString(), ". ",  _playerManager.GetCurrentPlayingPlayer().playerName));
 
         onGameIsOver += GameIsOver;
     }
@@ -88,16 +91,25 @@ public class GameplayManager : MonoBehaviour
     }
 
     // On player start moving according to dice number
-    private void OnPlayerStartJumping()
+    private void OnPlayerStartJumping(Player player = null)
     {
         _dice.SetActiveRollDiceButton(false);
         _playerTag.gameObject.SetActive(false);
+
+        _historyTo = player.tilePosition + 1; // Ditambah 1, soalnya tilePosition masih dlm bentuk index, mulai dari 0 bukan 1
+        _dice.SetDiceHistoryText(string.Concat(player.playerName, "\n", _historyFrom, " - ", _historyTo));
     }
 
     // On player finish moving according to dice number
     private void OnPlayerFinishJumping(Player player = null)
     {
         PlayerTilePositionChecking(player);
+    }
+
+    // On player start moving by ladder or snake
+    private void OnPlayerStartMoving(Player player = null)
+    {
+        _dice.SetDiceHistoryText(string.Concat(player.playerName, "\n", _historyFrom, " - ", _historyTo, " - ", player.tilePosition + 1));
     }
 
     // On player finish moved by ladder or snake
@@ -107,7 +119,7 @@ public class GameplayManager : MonoBehaviour
         _playerTag.gameObject.SetActive(true);
         _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
-        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
+        UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex + 1).ToString(), ". ", _playerManager.GetCurrentPlayingPlayer().playerName));
     }
 
     private void PlayerTilePositionChecking(Player player)
@@ -117,14 +129,16 @@ public class GameplayManager : MonoBehaviour
         {
             case TILE_TYPE.LADDER_BOTTOM:
                 Ladder ladder = tile.GetComponent<Ladder>();
-                ladder.MovePlayerToTop(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = ladder.top;
+
+                ladder.MovePlayerToTop(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving());
                 break;
 
             case TILE_TYPE.SNAKE_HEAD:
                 Snake snake = tile.GetComponent<Snake>();
-                snake.MovePlayerToTail(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = snake.tail;
+
+                snake.MovePlayerToTail(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving());
                 break;
 
             default:
@@ -139,13 +153,14 @@ public class GameplayManager : MonoBehaviour
             return;
 
         Player player = _playerManager.GetCurrentPlayingPlayer();
+        _historyFrom = player.tilePosition + 1; // Ditambah 1, soalnya tilePosition masih dlm bentuk index, mulai dari 0 bukan 1
         _playerManager.SetNextPlayingPlayer();
 
         // Get queue of player step
         Queue<Vector2> stepQueue = _board.GetStepQueue(player, player.tilePosition, _dice.diceNumber);
 
         // Move currently playing player step by step to destination tile
-        player.JumpStepByStep(stepQueue, () => OnPlayerStartJumping(), () => OnPlayerFinishJumping(player));
+        player.JumpStepByStep(stepQueue, onJumpStart: () => OnPlayerStartJumping(player), onJumpFinish: () => OnPlayerFinishJumping(player));
 
         // Check if player is on last tile
         if (HasPlayerWin(player))

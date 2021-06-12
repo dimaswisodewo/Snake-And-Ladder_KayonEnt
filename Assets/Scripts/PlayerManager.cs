@@ -53,6 +53,8 @@ public class PlayerManager : MonoBehaviour
 
         Player player = obj.GetComponent<Player>();
         player.SetSpriteColor((COLOR)index);
+        player.playerName = string.Concat("Player ", (index + 1));
+
         players.Add(player);
     }
 

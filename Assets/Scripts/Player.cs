@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
+    public string playerName;
     public int tilePosition = 0;
     public bool hasWin;
 
