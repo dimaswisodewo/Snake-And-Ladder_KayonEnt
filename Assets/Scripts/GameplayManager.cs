@@ -28,6 +28,14 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void OnPlayerCustomizationDoneButtonClick()
+    {
+        UIManager.Instance.SetActivePlayerCustomizationPanel(false);
+        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+
+        _playerManager.playerToSpawn = UIManager.Instance.GetPlayerCount();
+    }
+
     public void OnRandomizeGameComponentButtonClick()
     {
         _board.RandomizeBoardComponents();
@@ -39,7 +47,7 @@ public class GameplayManager : MonoBehaviour
         _playerManager.InitializePlayer();
 
         UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
-        UIManager.Instance.SetPlayerText(Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex));
+        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
 
         onGameIsOver += GameIsOver;
     }
@@ -92,7 +100,7 @@ public class GameplayManager : MonoBehaviour
     private void OnPlayerFinishMoving()
     {
         _dice.SetActiveRollDiceButton(true);
-        UIManager.Instance.SetPlayerText(Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex));
+        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
     }
 
     private void PlayerTilePositionChecking(Player player)

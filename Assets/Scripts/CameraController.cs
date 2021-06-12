@@ -17,37 +17,31 @@ public class CameraController : MonoBehaviour
         SetCameraFollow(_cameraFollow);
     }
 
-    private void Update()
+    public void OnBeginDrag()
     {
-        CameraPan();
+        _mouseInitialPos = Input.mousePosition;
     }
 
-    private void CameraPan()
+    // Drag for Camera Panning
+    public void OnDrag()
     {
-        if (Input.GetMouseButtonDown(0))
+        _mouseCurrentPos = Input.mousePosition;
+
+        if (_mouseInitialPos != _mouseCurrentPos)
         {
-            _mouseInitialPos = Input.mousePosition;
+            Vector2 camCurrentPos = _cameraFollow.transform.position;
+            Vector2 camToPos = camCurrentPos + (new Vector2(_mouseInitialPos.x - _mouseCurrentPos.x, _mouseInitialPos.y - _mouseCurrentPos.y) * _cameraPanSpeed);
+
+            _cameraFollow.transform.position = SetCameraPanClamping(camToPos);
         }
-        if (Input.GetMouseButton(0))
-        {
-            _mouseCurrentPos = Input.mousePosition;
 
-            if (_mouseInitialPos != _mouseCurrentPos)
-            {
-                Vector2 camCurrentPos = _cameraFollow.transform.position;
-                Vector2 camToPos = camCurrentPos + (new Vector2(_mouseInitialPos.x - _mouseCurrentPos.x, _mouseInitialPos.y - _mouseCurrentPos.y) * _cameraPanSpeed);
-
-                _cameraFollow.transform.position = SetCameraPanClamping(camToPos);
-            }
-
-            _mouseInitialPos = Input.mousePosition;
-        }
+        _mouseInitialPos = Input.mousePosition;
     }
 
     public Vector2 SetCameraPanClamping(Vector2 position)
     {
-        float posX = Mathf.Clamp(position.x, 0f, Board.Instance.RowCount);
-        float posY = Mathf.Clamp(position.y, 0f, Board.Instance.ColCount);
+        float posX = Mathf.Clamp(position.x, 0f, Board.Instance.ColCount - 1);
+        float posY = Mathf.Clamp(position.y, 0f, Board.Instance.RowCount - 1);
 
         return new Vector2(posX, posY);
     }

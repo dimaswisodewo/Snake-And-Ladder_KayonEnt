@@ -14,6 +14,11 @@ public static class MathUtility
         return Random.Range(min, max);
     }
 
+    public static int ClampNumber(int inputNumber, int min, int max)
+    {
+        return Mathf.Clamp(inputNumber, min, max);
+    }
+
     public static int StringToInt(string inputString)
     {
         return int.Parse(inputString);
@@ -49,6 +54,9 @@ public static class Config
 {
     public static string LADDER_TAG = "Ladder";
     public static string SNAKE_TAG = "Snake";
+
+    public static int MIN_PLAYER_COUNT = 2;
+    public static int MAX_PLAYER_COUNT = 6;
 
     public static string INPUT_FIELD_EMPTY = "Eh, masih ada yang belum diisi tuh!";
     public static string BOARD_TILE_NOT_VALID_MESSAGE = "Jumlah baris atau kolom paling sedikit setidaknya 2 ya!";
