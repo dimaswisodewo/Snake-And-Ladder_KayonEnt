@@ -37,6 +37,7 @@ public class GameplayManager : MonoBehaviour
         UIManager.Instance.SetActiveBoardCustomizationPanel(true);
 
         _playerManager.playerToSpawn = UIManager.Instance.GetPlayerCount();
+        UIManager.Instance.InitGameOverPanelContent();
     }
 
     public void OnRandomizeGameComponentButtonClick()

@@ -40,7 +40,6 @@ public class UIManager : MonoBehaviour
         SetActiveBoardCustomizationPanel(false);
         SetActiveBoardComponentCustomizationPanel(false);
         SetActiveGameOverPanel(false);
-        InitGameOverPanelContent();
     }
 
     public void SetPlayerText(string inputString)
@@ -132,7 +131,7 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-    private void InitGameOverPanelContent()
+    public void InitGameOverPanelContent()
     {
         for (int i = 0; i < GetPlayerCount(); i++)
         {
