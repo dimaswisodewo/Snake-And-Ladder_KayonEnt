@@ -10,7 +10,7 @@ public class ObjectPool : MonoBehaviour
     [SerializeField] private GameObject _tilePrefab;
 
     [Header("Configuration")]
-    [SerializeField] private int _amount = 500;
+    [SerializeField] private int _tileAmount = 500;
 
     [HideInInspector]
     public Vector2 _poolPosition = new Vector2(-999, -999);
@@ -27,7 +27,7 @@ public class ObjectPool : MonoBehaviour
 
     public void InstantiateObjectPool()
     {
-        for (int i = 0; i < _amount; i++)
+        for (int i = 0; i < _tileAmount; i++)
         {
             GameObject go = Instantiate(_tilePrefab);
             SendTileToPool(go);
@@ -54,5 +54,4 @@ public class ObjectPool : MonoBehaviour
 
         return go;
     }
-
 }
