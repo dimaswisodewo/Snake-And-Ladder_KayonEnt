@@ -13,8 +13,7 @@ public class GameplayManager : MonoBehaviour
     private int _historyFrom;
     private int _historyTo;
 
-    public delegate void OnGameIsOver();
-    public static event OnGameIsOver onGameIsOver;
+    private Queue<Player> _winningQueue = new Queue<Player>();
 
     public void OnGenerateButtonClick()
     {
@@ -54,8 +53,6 @@ public class GameplayManager : MonoBehaviour
 
         UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
         UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex +1).ToString(), ". ",  _playerManager.GetCurrentPlayingPlayer().playerName));
-
-        onGameIsOver += GameIsOver;
     }
 
     public void OnBackButtonClick()
@@ -87,7 +84,15 @@ public class GameplayManager : MonoBehaviour
 
     private void GameIsOver()
     {
-        Debug.Log("GAME IS OVER!!!");
+        UIManager.Instance.SetActiveGameOverPanel(true);
+        for (int i = 0; i < _playerManager.playerToSpawn; i++)
+        {
+            Player player = _winningQueue.Dequeue();
+
+            UIManager.Instance.gameOverContents[i].SetPositionText(string.Concat("#", (i + 1).ToString("00")));
+            UIManager.Instance.gameOverContents[i].SetPlayerImageColor(player.GetSpriteColor());
+            UIManager.Instance.gameOverContents[i].SetPlayerName(player.playerName);
+        }
     }
 
     // On player start moving according to dice number
@@ -113,13 +118,24 @@ public class GameplayManager : MonoBehaviour
     }
 
     // On player finish moved by ladder or snake
-    private void OnPlayerFinishMoving()
+    private void OnPlayerFinishMoving(Player player = null)
     {
         _dice.SetActiveRollDiceButton(true);
         _playerTag.gameObject.SetActive(true);
         _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
         UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex + 1).ToString(), ". ", _playerManager.GetCurrentPlayingPlayer().playerName));
+
+        // Check if player is on last tile
+        if (HasPlayerWin(player))
+        {
+            SetPlayerHasWin(player);
+            _winningQueue.Enqueue(player);
+        }
+
+        // Check if game is over
+        if (IsGameOver())
+            GameIsOver();
     }
 
     private void PlayerTilePositionChecking(Player player)
@@ -131,18 +147,18 @@ public class GameplayManager : MonoBehaviour
                 Ladder ladder = tile.GetComponent<Ladder>();
                 player.tilePosition = ladder.top;
 
-                ladder.MovePlayerToTop(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving());
+                ladder.MovePlayerToTop(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving(player));
                 break;
 
             case TILE_TYPE.SNAKE_HEAD:
                 Snake snake = tile.GetComponent<Snake>();
                 player.tilePosition = snake.tail;
 
-                snake.MovePlayerToTail(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving());
+                snake.MovePlayerToTail(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving(player));
                 break;
 
             default:
-                OnPlayerFinishMoving();
+                OnPlayerFinishMoving(player);
                 break;
         }
     }
@@ -161,13 +177,5 @@ public class GameplayManager : MonoBehaviour
 
         // Move currently playing player step by step to destination tile
         player.JumpStepByStep(stepQueue, onJumpStart: () => OnPlayerStartJumping(player), onJumpFinish: () => OnPlayerFinishJumping(player));
-
-        // Check if player is on last tile
-        if (HasPlayerWin(player))
-            SetPlayerHasWin(player);
-
-        // Check if game is over
-        if (IsGameOver())
-            onGameIsOver?.Invoke();
     }
 }

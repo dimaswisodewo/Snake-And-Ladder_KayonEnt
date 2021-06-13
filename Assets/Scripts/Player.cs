@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
         spriteRenderer.color = newColor;
     }
 
+    public Color GetSpriteColor()
+    {
+        return spriteRenderer.color;
+    }
+
     public void JumpStepByStep(Queue<Vector2> stepQueue, System.Action onJumpStart = null, System.Action onJumpFinish = null)
     {
         StartCoroutine(JumpProgressively(stepQueue, onJumpStart, onJumpFinish));

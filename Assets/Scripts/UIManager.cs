@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+
     [SerializeField] private GameObject _playerCustomizationPanel;
     [SerializeField] private GameObject _boardCustomizationPanel;
     [SerializeField] private GameObject _boardComponentCustomizationPanel;
+    [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private GameObject _gameOverPanelContentPrefab;
+    [SerializeField] private Transform _gameOverContentParent;
     [SerializeField] private Text _playerText;
 
     [Header("Board Customization")]
@@ -21,6 +25,9 @@ public class UIManager : MonoBehaviour
     [Header("Player Customization")]
     [SerializeField] private Text _playerCountText;
 
+    [HideInInspector]
+    public List<GameOverContent> gameOverContents = new List<GameOverContent>();
+
     // Singleton initialization
     private void Awake()
     {
@@ -32,6 +39,8 @@ public class UIManager : MonoBehaviour
         SetActivePlayerCustomizationPanel(true);
         SetActiveBoardCustomizationPanel(false);
         SetActiveBoardComponentCustomizationPanel(false);
+        SetActiveGameOverPanel(false);
+        InitGameOverPanelContent();
     }
 
     public void SetPlayerText(string inputString)
@@ -80,6 +89,11 @@ public class UIManager : MonoBehaviour
         _boardCustomizationPanel.SetActive(setActive);
     }
 
+    public void SetActiveGameOverPanel(bool setActive)
+    {
+        _gameOverPanel.SetActive(setActive);
+    }
+
     public void SetActiveBoardComponentCustomizationPanel(bool setActive)
     {
         _boardComponentCustomizationPanel.SetActive(setActive);
@@ -108,6 +122,26 @@ public class UIManager : MonoBehaviour
         SetPlayerCountText(playerCount.ToString());
     }
 
+    public void OnRestartButtonClick()
+    {
+        SceneLoader.Instance.LoadScene(Config.SCENE_GAMEPLAY);
+    }
+
+    public void OnQuitButtonClick()
+    {
+        Application.Quit();
+    }
+
+    private void InitGameOverPanelContent()
+    {
+        for (int i = 0; i < GetPlayerCount(); i++)
+        {
+            GameObject go = Instantiate(_gameOverPanelContentPrefab, _gameOverContentParent);
+            GameOverContent gameOverContent = go.GetComponent<GameOverContent>();
+            gameOverContents.Add(gameOverContent);
+        }
+    }
+
     private void SetPlayerCountText(string inputString)
     {
         _playerCountText.text = inputString;
@@ -117,4 +151,5 @@ public class UIManager : MonoBehaviour
     {
         return int.Parse(_playerCountText.text);
     }
+
 }
