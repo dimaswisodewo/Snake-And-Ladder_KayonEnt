@@ -49,6 +49,15 @@ public static class MathUtility
 
         return newColor;
     }
+
+    public static Color32 GetRandomColor()
+    {
+        byte r = (byte)GetRandomNumber(0, 255);
+        byte g = (byte)GetRandomNumber(0, 255);
+        byte b = (byte)GetRandomNumber(0, 255);
+
+        return new Color32(r, g, b, 255);
+    }
 }
 public static class Config
 {
@@ -62,6 +71,8 @@ public static class Config
     public static string BOARD_TILE_NOT_VALID_MESSAGE = "Jumlah baris atau kolom paling sedikit setidaknya 2 ya!";
     public static string BOARD_SNAKE_LADDER_NOT_VALID_MESSAGE = "jumlah ular atau tangga paling sedikit setidaknya 0 ya!";
     public static string BOARD_CONFIG_NOT_VALID_MESSAGE = "Jumlah keseluruhan ular dan tangga jangan sampai lebih dari ";
+
+    public static string SCENE_GAMEPLAY = "SnL_Gameplay";
 
     public static string TEXT_RED = "Merah";
     public static string TEXT_GREEN = "Hijau";

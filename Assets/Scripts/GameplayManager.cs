@@ -10,8 +10,10 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private PlayerTag _playerTag;
 
-    public delegate void OnGameIsOver();
-    public static event OnGameIsOver onGameIsOver;
+    private int _historyFrom;
+    private int _historyTo;
+
+    private Queue<Player> _winningQueue = new Queue<Player>();
 
     public void OnGenerateButtonClick()
     {
@@ -32,9 +34,49 @@ public class GameplayManager : MonoBehaviour
     public void OnPlayerCustomizationDoneButtonClick()
     {
         UIManager.Instance.SetActivePlayerCustomizationPanel(false);
-        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        //UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        UIManager.Instance.SetActivePlayerDetailPanel(true);
+        ResetPlayerDetailPanel();
 
         _playerManager.playerToSpawn = UIManager.Instance.GetPlayerCount();
+        UIManager.Instance.InitGameOverPanelContent();
+    }
+
+    public void OnChangeColorButtonClick()
+    {
+        UIManager.Instance.ChangePlayerPreviewColor();
+    }
+
+    public void OnPlayerDetailDoneButtonClick()
+    {
+        PlayerData playerData = new PlayerData();
+        playerData.playerName = UIManager.Instance.GetPlayerNameInputFieldValue();
+        playerData.playerColor = UIManager.Instance.GetPlayerPreviewColor();
+
+        // If input field empty, set player name to Player 1, Player 2, etc
+        if (string.IsNullOrEmpty(playerData.playerName) || string.IsNullOrWhiteSpace(playerData.playerName))
+        {
+            playerData.playerName = UIManager.Instance.GetPlayerDetailTitleText();
+        }
+
+        _playerManager.playerDatas.Enqueue(playerData);
+
+        if (_playerManager.playerDatas.Count < _playerManager.playerToSpawn)
+        {
+            ResetPlayerDetailPanel();
+        }
+        else
+        {
+            UIManager.Instance.SetActivePlayerDetailPanel(false);
+            UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        }
+    }
+
+    public void ResetPlayerDetailPanel()
+    {
+        UIManager.Instance.SetPlayerDetailTitleText(string.Concat("Player ", _playerManager.playerDatas.Count + 1));
+        UIManager.Instance.ResetPlayerNameInputFieldValue();
+        UIManager.Instance.ChangePlayerPreviewColor();
     }
 
     public void OnRandomizeGameComponentButtonClick()
@@ -50,9 +92,7 @@ public class GameplayManager : MonoBehaviour
         _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
         UIManager.Instance.SetActiveBoardComponentCustomizationPanel(false);
-        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
-
-        onGameIsOver += GameIsOver;
+        UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex +1).ToString(), ". ",  _playerManager.GetCurrentPlayingPlayer().playerName));
     }
 
     public void OnBackButtonClick()
@@ -84,14 +124,26 @@ public class GameplayManager : MonoBehaviour
 
     private void GameIsOver()
     {
-        Debug.Log("GAME IS OVER!!!");
+        UIManager.Instance.SetActiveGameOverPanel(true);
+        for (int i = 0; i < _playerManager.playerToSpawn; i++)
+        {
+            Player player = _winningQueue.Dequeue();
+
+            UIManager.Instance.gameOverContents[i].SetPositionText(string.Concat("#", (i + 1).ToString("00")));
+            UIManager.Instance.gameOverContents[i].SetPlayerImageColor(player.GetSpriteColor());
+            UIManager.Instance.gameOverContents[i].SetPlayerName(player.playerName);
+            UIManager.Instance.gameOverContents[i].SetPlayerSteps(player.steps);
+        }
     }
 
     // On player start moving according to dice number
-    private void OnPlayerStartJumping()
+    private void OnPlayerStartJumping(Player player = null)
     {
         _dice.SetActiveRollDiceButton(false);
         _playerTag.gameObject.SetActive(false);
+
+        _historyTo = player.tilePosition + 1; // Ditambah 1, soalnya tilePosition masih dlm bentuk index, mulai dari 0 bukan 1
+        _dice.SetDiceHistoryText(string.Concat(player.playerName, "\n", _historyFrom, " - ", _historyTo));
     }
 
     // On player finish moving according to dice number
@@ -100,14 +152,31 @@ public class GameplayManager : MonoBehaviour
         PlayerTilePositionChecking(player);
     }
 
+    // On player start moving by ladder or snake
+    private void OnPlayerStartMoving(Player player = null)
+    {
+        _dice.SetDiceHistoryText(string.Concat(player.playerName, "\n", _historyFrom, " - ", _historyTo, " - ", player.tilePosition + 1));
+    }
+
     // On player finish moved by ladder or snake
-    private void OnPlayerFinishMoving()
+    private void OnPlayerFinishMoving(Player player = null)
     {
         _dice.SetActiveRollDiceButton(true);
         _playerTag.gameObject.SetActive(true);
         _playerTag.SetPlayerTagPosition(_playerManager.GetCurrentPlayingPlayer().transform.position);
 
-        UIManager.Instance.SetPlayerText(string.Concat(_playerManager.CurrentlyPlayingIndex + 1, ". ", Config.GetPlayerText((COLOR)_playerManager.CurrentlyPlayingIndex)));
+        UIManager.Instance.SetPlayerText(string.Concat((_playerManager.CurrentlyPlayingIndex + 1).ToString(), ". ", _playerManager.GetCurrentPlayingPlayer().playerName));
+
+        // Check if player is on last tile
+        if (HasPlayerWin(player))
+        {
+            SetPlayerHasWin(player);
+            _winningQueue.Enqueue(player);
+        }
+
+        // Check if game is over
+        if (IsGameOver())
+            GameIsOver();
     }
 
     private void PlayerTilePositionChecking(Player player)
@@ -117,18 +186,20 @@ public class GameplayManager : MonoBehaviour
         {
             case TILE_TYPE.LADDER_BOTTOM:
                 Ladder ladder = tile.GetComponent<Ladder>();
-                ladder.MovePlayerToTop(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = ladder.top;
+
+                ladder.MovePlayerToTop(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving(player));
                 break;
 
             case TILE_TYPE.SNAKE_HEAD:
                 Snake snake = tile.GetComponent<Snake>();
-                snake.MovePlayerToTail(player, onMoveFinish: () => OnPlayerFinishMoving());
                 player.tilePosition = snake.tail;
+
+                snake.MovePlayerToTail(player, onMoveStart: () => OnPlayerStartMoving(player), onMoveFinish: () => OnPlayerFinishMoving(player));
                 break;
 
             default:
-                OnPlayerFinishMoving();
+                OnPlayerFinishMoving(player);
                 break;
         }
     }
@@ -139,20 +210,14 @@ public class GameplayManager : MonoBehaviour
             return;
 
         Player player = _playerManager.GetCurrentPlayingPlayer();
+        player.steps += 1;
+        _historyFrom = player.tilePosition + 1; // Ditambah 1, soalnya tilePosition masih dlm bentuk index, mulai dari 0 bukan 1
         _playerManager.SetNextPlayingPlayer();
 
         // Get queue of player step
         Queue<Vector2> stepQueue = _board.GetStepQueue(player, player.tilePosition, _dice.diceNumber);
 
         // Move currently playing player step by step to destination tile
-        player.JumpStepByStep(stepQueue, () => OnPlayerStartJumping(), () => OnPlayerFinishJumping(player));
-
-        // Check if player is on last tile
-        if (HasPlayerWin(player))
-            SetPlayerHasWin(player);
-
-        // Check if game is over
-        if (IsGameOver())
-            onGameIsOver?.Invoke();
+        player.JumpStepByStep(stepQueue, onJumpStart: () => OnPlayerStartJumping(player), onJumpFinish: () => OnPlayerFinishJumping(player));
     }
 }

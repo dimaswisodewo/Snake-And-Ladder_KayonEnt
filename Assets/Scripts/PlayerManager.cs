@@ -6,7 +6,8 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject _playerPrefab;
     private int _currentlyPlayingIndex = 0;
-    
+    public Queue<PlayerData> playerDatas = new Queue<PlayerData>();
+
     [HideInInspector]
     public int playerToSpawn = 2;
 
@@ -51,9 +52,19 @@ public class PlayerManager : MonoBehaviour
         GameObject obj = Instantiate(_playerPrefab);
         obj.name = string.Concat("Player_", (index + 1));
 
+        PlayerData playerData = playerDatas.Dequeue();
+
         Player player = obj.GetComponent<Player>();
-        player.SetSpriteColor((COLOR)index);
+        player.SetSpriteColor(playerData.playerColor);
+        player.playerName = playerData.playerName;
+
         players.Add(player);
     }
 
+}
+
+public struct PlayerData
+{
+    public string playerName;
+    public Color playerColor;
 }

@@ -5,14 +5,19 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
+    public string playerName;
     public int tilePosition = 0;
+    public int steps = 0;
     public bool hasWin;
 
-    public void SetSpriteColor(COLOR colorEnum)
+    public void SetSpriteColor(Color newColor)
     {
-        Color32 color32 = Config.GetColor32(colorEnum);
-        Color newColor = MathUtility.ConvertToColor(color32);
         spriteRenderer.color = newColor;
+    }
+
+    public Color GetSpriteColor()
+    {
+        return spriteRenderer.color;
     }
 
     public void JumpStepByStep(Queue<Vector2> stepQueue, System.Action onJumpStart = null, System.Action onJumpFinish = null)
