@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [SerializeField] private GameObject _playerCustomizationPanel;
+    [SerializeField] private GameObject _playerDetailPanel;
     [SerializeField] private GameObject _boardCustomizationPanel;
     [SerializeField] private GameObject _boardComponentCustomizationPanel;
     [SerializeField] private GameObject _gameOverPanel;
@@ -25,6 +26,11 @@ public class UIManager : MonoBehaviour
     [Header("Player Customization")]
     [SerializeField] private Text _playerCountText;
 
+    [Header("Player Detail Customization")]
+    [SerializeField] private Text _playerDetailTitle;
+    [SerializeField] private Image _playerPreview;
+    [SerializeField] private InputField _playerNameIF;
+
     [HideInInspector]
     public List<GameOverContent> gameOverContents = new List<GameOverContent>();
 
@@ -37,6 +43,7 @@ public class UIManager : MonoBehaviour
         SetPlayerText(string.Empty);
         SetPlayerCountText(Config.MIN_PLAYER_COUNT.ToString());
         SetActivePlayerCustomizationPanel(true);
+        SetActivePlayerDetailPanel(false);
         SetActiveBoardCustomizationPanel(false);
         SetActiveBoardComponentCustomizationPanel(false);
         SetActiveGameOverPanel(false);
@@ -45,6 +52,16 @@ public class UIManager : MonoBehaviour
     public void SetPlayerText(string inputString)
     {
         _playerText.text = inputString;
+    }
+
+    public void SetPlayerDetailTitleText(string inputString)
+    {
+        _playerDetailTitle.text = inputString;
+    }
+
+    public string GetPlayerDetailTitleText()
+    {
+        return _playerDetailTitle.text;
     }
 
     public bool IsBoardConfigFieldEmpty()
@@ -78,9 +95,34 @@ public class UIManager : MonoBehaviour
         return MathUtility.StringToInt(_snakeCountIF.text);
     }
 
+    public string GetPlayerNameInputFieldValue()
+    {
+        return _playerNameIF.text;
+    }
+
+    public void ResetPlayerNameInputFieldValue()
+    {
+        _playerNameIF.text = string.Empty;
+    }
+
+    public Color GetPlayerPreviewColor()
+    {
+        return _playerPreview.color;
+    }
+
+    public void ChangePlayerPreviewColor()
+    {
+        _playerPreview.color = MathUtility.ConvertToColor(MathUtility.GetRandomColor());
+    }
+
     public void SetActivePlayerCustomizationPanel(bool setActive)
     {
         _playerCustomizationPanel.SetActive(setActive);
+    }
+
+    public void SetActivePlayerDetailPanel(bool setActive)
+    {
+        _playerDetailPanel.SetActive(setActive);
     }
 
     public void SetActiveBoardCustomizationPanel(bool setActive)
@@ -150,5 +192,4 @@ public class UIManager : MonoBehaviour
     {
         return int.Parse(_playerCountText.text);
     }
-
 }

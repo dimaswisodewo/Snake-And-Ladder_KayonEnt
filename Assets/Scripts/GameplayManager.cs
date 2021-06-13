@@ -34,10 +34,49 @@ public class GameplayManager : MonoBehaviour
     public void OnPlayerCustomizationDoneButtonClick()
     {
         UIManager.Instance.SetActivePlayerCustomizationPanel(false);
-        UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        //UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        UIManager.Instance.SetActivePlayerDetailPanel(true);
+        ResetPlayerDetailPanel();
 
         _playerManager.playerToSpawn = UIManager.Instance.GetPlayerCount();
         UIManager.Instance.InitGameOverPanelContent();
+    }
+
+    public void OnChangeColorButtonClick()
+    {
+        UIManager.Instance.ChangePlayerPreviewColor();
+    }
+
+    public void OnPlayerDetailDoneButtonClick()
+    {
+        PlayerData playerData = new PlayerData();
+        playerData.playerName = UIManager.Instance.GetPlayerNameInputFieldValue();
+        playerData.playerColor = UIManager.Instance.GetPlayerPreviewColor();
+
+        // If input field empty, set player name to Player 1, Player 2, etc
+        if (string.IsNullOrEmpty(playerData.playerName) || string.IsNullOrWhiteSpace(playerData.playerName))
+        {
+            playerData.playerName = UIManager.Instance.GetPlayerDetailTitleText();
+        }
+
+        _playerManager.playerDatas.Enqueue(playerData);
+
+        if (_playerManager.playerDatas.Count < _playerManager.playerToSpawn)
+        {
+            ResetPlayerDetailPanel();
+        }
+        else
+        {
+            UIManager.Instance.SetActivePlayerDetailPanel(false);
+            UIManager.Instance.SetActiveBoardCustomizationPanel(true);
+        }
+    }
+
+    public void ResetPlayerDetailPanel()
+    {
+        UIManager.Instance.SetPlayerDetailTitleText(string.Concat("Player ", _playerManager.playerDatas.Count + 1));
+        UIManager.Instance.ResetPlayerNameInputFieldValue();
+        UIManager.Instance.ChangePlayerPreviewColor();
     }
 
     public void OnRandomizeGameComponentButtonClick()
@@ -93,6 +132,7 @@ public class GameplayManager : MonoBehaviour
             UIManager.Instance.gameOverContents[i].SetPositionText(string.Concat("#", (i + 1).ToString("00")));
             UIManager.Instance.gameOverContents[i].SetPlayerImageColor(player.GetSpriteColor());
             UIManager.Instance.gameOverContents[i].SetPlayerName(player.playerName);
+            UIManager.Instance.gameOverContents[i].SetPlayerSteps(player.steps);
         }
     }
 
@@ -170,6 +210,7 @@ public class GameplayManager : MonoBehaviour
             return;
 
         Player player = _playerManager.GetCurrentPlayingPlayer();
+        player.steps += 1;
         _historyFrom = player.tilePosition + 1; // Ditambah 1, soalnya tilePosition masih dlm bentuk index, mulai dari 0 bukan 1
         _playerManager.SetNextPlayingPlayer();
 

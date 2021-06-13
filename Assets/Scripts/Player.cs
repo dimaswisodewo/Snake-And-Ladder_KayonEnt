@@ -7,12 +7,11 @@ public class Player : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public string playerName;
     public int tilePosition = 0;
+    public int steps = 0;
     public bool hasWin;
 
-    public void SetSpriteColor(COLOR colorEnum)
+    public void SetSpriteColor(Color newColor)
     {
-        Color32 color32 = Config.GetColor32(colorEnum);
-        Color newColor = MathUtility.ConvertToColor(color32);
         spriteRenderer.color = newColor;
     }
 

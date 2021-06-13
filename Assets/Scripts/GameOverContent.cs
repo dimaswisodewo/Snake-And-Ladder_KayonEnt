@@ -7,6 +7,7 @@ public class GameOverContent : MonoBehaviour
 {
     [SerializeField] private Text _positionText;
     [SerializeField] private Text _playerName;
+    [SerializeField] private Text _playerSteps;
     [SerializeField] private Image _playerImage;
 
     public void SetPositionText(string positionString)
@@ -17,6 +18,11 @@ public class GameOverContent : MonoBehaviour
     public void SetPlayerName(string playerName)
     {
         _playerName.text = playerName;
+    }
+
+    public void SetPlayerSteps(int steps)
+    {
+        _playerSteps.text = string.Concat(steps, " Steps");
     }
 
     public void SetPlayerImageColor(Color playerColor)

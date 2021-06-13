@@ -49,6 +49,15 @@ public static class MathUtility
 
         return newColor;
     }
+
+    public static Color32 GetRandomColor()
+    {
+        byte r = (byte)GetRandomNumber(0, 255);
+        byte g = (byte)GetRandomNumber(0, 255);
+        byte b = (byte)GetRandomNumber(0, 255);
+
+        return new Color32(r, g, b, 255);
+    }
 }
 public static class Config
 {
